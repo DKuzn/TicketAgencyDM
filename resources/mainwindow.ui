@@ -31,7 +31,7 @@
     </property>
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="1" colspan="2">
-      <widget class="QComboBox" name="eventSite"/>
+      <widget class="QComboBox" name="eventSiteChoice"/>
      </item>
      <item row="2" column="2">
       <widget class="QLabel" name="label_5">
@@ -94,13 +94,13 @@
       </widget>
      </item>
      <item row="3" column="2">
-      <widget class="QComboBox" name="place"/>
+      <widget class="QComboBox" name="placeChoice"/>
      </item>
      <item row="1" column="1" colspan="2">
-      <widget class="QComboBox" name="event"/>
+      <widget class="QComboBox" name="eventChoice"/>
      </item>
      <item row="3" column="1">
-      <widget class="QComboBox" name="row"/>
+      <widget class="QComboBox" name="rowChoice"/>
      </item>
      <item row="2" column="1">
       <widget class="QLabel" name="label_4">
@@ -115,7 +115,7 @@
       </widget>
      </item>
      <item row="5" column="1" colspan="2">
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="addToOrderButton">
        <property name="font">
         <font>
          <pointsize>12</pointsize>
@@ -229,7 +229,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QListWidget" name="listWidget">
+      <widget class="QListWidget" name="ticketsList">
        <property name="font">
         <font>
          <pointsize>12</pointsize>
@@ -238,7 +238,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="payButton">
        <property name="font">
         <font>
          <pointsize>12</pointsize>
@@ -251,7 +251,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="formTicketsButton">
     <property name="geometry">
      <rect>
       <x>310</x>
