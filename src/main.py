@@ -7,18 +7,28 @@ import mainwindow
 class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def __init__(self):
         super(TicketAgencyApp, self).__init__()
+        self.order_list = []
         self.setupUi(self)
         self.payButton.clicked.connect(self.pay_button_clicked)
         self.addToOrderButton.clicked.connect(self.add_to_order_button_clicked)
         self.formTicketsButton.clicked.connect(self.form_ticket_button_clicked)
         self.eventSiteChoice.addItems(event_sites_list())
         self.eventSiteChoice.activated.connect(self.event_site_choose)
+        self.eventChoice.activated.connect(self.event_choose)
+        self.rowChoice.activated.connect(self.row_choose)
+        self.placeChoice.activated.connect(self.place_choose)
 
     def pay_button_clicked(self):
         pass
 
     def add_to_order_button_clicked(self):
-        pass
+        event = self.eventChoice.currentText()
+        row = self.rowChoice.currentText()
+        place = self.placeChoice.currentText()
+        ticket = find_ticket(event, row, place)
+        self.order_list.append(str(ticket))
+        self.ticketsList.clear()
+        self.ticketsList.addItems(self.order_list)
 
     def form_ticket_button_clicked(self):
         pass
@@ -26,6 +36,25 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def event_site_choose(self):
         self.eventChoice.clear()
         self.eventChoice.addItems(events_list(self.eventSiteChoice.currentText()))
+
+    def event_choose(self):
+        rows = rows_list(self.eventChoice.currentText())
+        self.rowChoice.clear()
+        self.rowChoice.addItems(rows)
+
+    def row_choose(self):
+        event = self.eventChoice.currentText()
+        row = self.rowChoice.currentText()
+        places = places_list(event, row)
+        self.placeChoice.clear()
+        self.placeChoice.addItems(places)
+
+    def place_choose(self):
+        row = self.rowChoice.currentText()
+        place = self.placeChoice.currentText()
+        event = self.eventChoice.currentText()
+        ticket = find_ticket(event, row, place)
+        self.ticketPrice.setText(str(ticket[1]))
 
 
 def main():
