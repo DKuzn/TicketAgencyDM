@@ -77,6 +77,11 @@ def find_ticket(event: str, row: str, place: str):
     return ticket
 
 
+def ticket_reservation(ticket: int):
+    cursor.execute("UPDATE Билет SET Забронирован = 1 WHERE Номер_билета = '%s'" % ticket)
+    dbase.commit()
+
+
 if __name__ == '__main__':
     event_site = event_sites_list()
     event = events_list(event_site[0])

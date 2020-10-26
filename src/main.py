@@ -42,10 +42,15 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         event = self.eventChoice.currentText()
         row = self.rowChoice.currentText()
         place = self.placeChoice.currentText()
-        ticket = find_ticket(event, row, place)
-        self.order_list.append(str(ticket))
-        self.ticketsList.clear()
-        self.ticketsList.addItems(self.order_list)
+        if event and row and place:
+            ticket = find_ticket(event, row, place)
+            ticket_reservation(ticket[0])
+            self.order_list.append(str(ticket))
+            self.ticketsList.clear()
+            self.ticketsList.addItems(self.order_list)
+            self.row_choose()
+        elif not place:
+            self.event_choose()
 
     def form_ticket_button_clicked(self):
         pass
