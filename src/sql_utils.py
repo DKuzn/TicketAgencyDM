@@ -82,6 +82,26 @@ def ticket_reservation(ticket: int):
     dbase.commit()
 
 
+def ticket_unreserved(ticket: int):
+    cursor.execute("UPDATE Билет SET Забронирован = 0 WHERE Номер_билета = '%s'" % ticket)
+    dbase.commit()
+
+
+def buy_ticket(ticket: int, order: int):
+    cursor.execute("UPDATE Билет SET УИН_Заказа = '%s' "
+                   "WHERE Номер_билета = '%s' AND Забронирован = 1" % (order, ticket))
+    dbase.commit()
+
+
+def add_client(email: str, first_name: str = None, last_name: str = None):
+    cursor.execute("INSERT INTO Клиент (Email) VALUES ('%s')" % email)
+    if first_name is not None:
+        cursor.execute("UPDATE Клиент SET Имя = '%s' WHERE Email = '%s'" % (first_name, email))
+    if last_name is not None:
+        cursor.execute("UPDATE Клиент SET Фамилия = '%s' WHERE Email = '%s'" % (last_name, email))
+    dbase.commit()
+
+
 if __name__ == '__main__':
     event_site = event_sites_list()
     event = events_list(event_site[0])
