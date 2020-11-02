@@ -19,6 +19,7 @@ import sys
 from PyQt5 import QtWidgets
 from sql_utils import *
 import mainwindow
+import datetime
 
 
 class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
@@ -29,6 +30,9 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.payButton.clicked.connect(self.pay_button_clicked)
         self.addToOrderButton.clicked.connect(self.add_to_order_button_clicked)
         self.formTicketsButton.clicked.connect(self.form_ticket_button_clicked)
+        self.cancelButton.clicked.connect(self.cancel_button_clicked)
+        self.dateFrom.setDate(datetime.date.today())
+        self.dateTo.setDate(datetime.date.today())
         self.eventSiteChoice.addItems(event_sites_list())
         self.eventSiteChoice.activated.connect(self.event_site_choose)
         self.eventChoice.activated.connect(self.event_choose)
@@ -45,7 +49,7 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         if event and row and place:
             ticket = find_ticket(event, row, place)
             ticket_reservation(ticket[0])
-            self.order_list.append(str(ticket))
+            self.order_list.append(str(ticket[0]))
             self.ticketsList.clear()
             self.ticketsList.addItems(self.order_list)
             self.row_choose()
@@ -55,8 +59,16 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def form_ticket_button_clicked(self):
         pass
 
+    def cancel_button_clicked(self):
+        for i in self.order_list:
+            ticket_unreserved(int(i))
+        self.ticketsList.clear()
+
     def event_site_choose(self):
         self.eventChoice.clear()
+        self.rowChoice.clear()
+        self.placeChoice.clear()
+        self.ticketPrice.setText('0')
         self.eventChoice.addItems(events_list(self.eventSiteChoice.currentText()))
 
     def event_choose(self):
