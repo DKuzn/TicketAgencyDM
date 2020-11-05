@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1155</width>
-    <height>641</height>
+    <width>1100</width>
+    <height>645</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1155</width>
-    <height>641</height>
+    <width>1100</width>
+    <height>645</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -25,67 +25,78 @@
      <rect>
       <x>20</x>
       <y>30</y>
-      <width>631</width>
-      <height>410</height>
+      <width>581</width>
+      <height>453</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="ticketChooser">
-     <item row="2" column="0" rowspan="2">
-      <widget class="QLabel" name="label_10">
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_14">
        <property name="font">
         <font>
          <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>Выберите время</string>
+        <string>Выберите тип мероприятия</string>
        </property>
       </widget>
      </item>
-     <item row="7" column="0" rowspan="2">
-      <widget class="QLabel" name="label_3">
+     <item row="7" column="1" colspan="2">
+      <widget class="QComboBox" name="eventChoice"/>
+     </item>
+     <item row="1" column="2">
+      <widget class="QDateEdit" name="dateTo">
+       <property name="calendarPopup">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="2">
+      <widget class="QComboBox" name="placeChoice"/>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_2">
        <property name="font">
         <font>
          <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>Выберите место</string>
+        <string>Выберите площадку</string>
        </property>
       </widget>
      </item>
      <item row="8" column="2">
-      <widget class="QComboBox" name="placeChoice"/>
-     </item>
-     <item row="2" column="2">
-      <widget class="QLabel" name="label_12">
+      <widget class="QLabel" name="label_5">
        <property name="font">
         <font>
          <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>По</string>
+        <string>Место</string>
        </property>
       </widget>
-     </item>
-     <item row="10" column="1" colspan="2">
-      <widget class="QPushButton" name="addToOrderButton">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Добавить к заказу</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="1">
-      <widget class="QComboBox" name="rowChoice"/>
      </item>
      <item row="6" column="1" colspan="2">
-      <widget class="QComboBox" name="eventChoice"/>
+      <widget class="QComboBox" name="eventTypeChoice"/>
+     </item>
+     <item row="1" column="1">
+      <widget class="QDateEdit" name="dateFrom">
+       <property name="alignment">
+        <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+       </property>
+       <property name="calendarPopup">
+        <bool>true</bool>
+       </property>
+       <property name="currentSectionIndex">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QComboBox" name="rowChoice"/>
      </item>
      <item row="0" column="0" rowspan="2">
       <widget class="QLabel" name="label_9">
@@ -99,8 +110,149 @@
        </property>
       </widget>
      </item>
+     <item row="5" column="1" colspan="2">
+      <widget class="QComboBox" name="eventSiteChoice"/>
+     </item>
      <item row="0" column="1">
       <widget class="QLabel" name="label_15">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>С</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QTimeEdit" name="timeFrom">
+       <property name="keyboardTracking">
+        <bool>false</bool>
+       </property>
+       <property name="currentSection">
+        <enum>QDateTimeEdit::MinuteSection</enum>
+       </property>
+       <property name="calendarPopup">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0" rowspan="2">
+      <widget class="QLabel" name="label_3">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Выберите место</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Выберите мероприятие</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="2">
+      <widget class="QLabel" name="label_13">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>руб.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="1">
+      <widget class="QLabel" name="ticketPrice">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QLabel" name="label_4">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Ряд</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="label_12">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>По</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QTimeEdit" name="timeTo">
+       <property name="dateTime">
+        <datetime>
+         <hour>23</hour>
+         <minute>59</minute>
+         <second>0</second>
+         <year>2000</year>
+         <month>1</month>
+         <day>1</day>
+        </datetime>
+       </property>
+       <property name="currentSection">
+        <enum>QDateTimeEdit::MinuteSection</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="1" colspan="2">
+      <widget class="QPushButton" name="addToOrderButton">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Добавить в заказ</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Цена</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="label_11">
        <property name="font">
         <font>
          <pointsize>12</pointsize>
@@ -123,157 +275,30 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="1">
-      <widget class="QLabel" name="label_4">
+     <item row="2" column="0" rowspan="2">
+      <widget class="QLabel" name="label_10">
        <property name="font">
         <font>
          <pointsize>12</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>Ряд</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="label_11">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>С</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="2">
-      <widget class="QLabel" name="label_13">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>руб.</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_14">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Выберите тип мероприятия</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Выберите площадку</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Выберите мероприятие</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="1">
-      <widget class="QLabel" name="ticketPrice">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>0</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Цена</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="2">
-      <widget class="QLabel" name="label_5">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Место</string>
+        <string>Выберите время</string>
        </property>
       </widget>
      </item>
      <item row="4" column="1" colspan="2">
-      <widget class="QComboBox" name="eventSiteChoice"/>
+      <widget class="QComboBox" name="eventSiteTypeChoice"/>
      </item>
-     <item row="5" column="1" colspan="2">
-      <widget class="QComboBox" name="eventTypeChoice"/>
-     </item>
-     <item row="3" column="1">
-      <widget class="QTimeEdit" name="timeFrom">
-       <property name="keyboardTracking">
-        <bool>false</bool>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_17">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
        </property>
-       <property name="currentSection">
-        <enum>QDateTimeEdit::MinuteSection</enum>
-       </property>
-       <property name="calendarPopup">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QTimeEdit" name="timeTo">
-       <property name="currentSection">
-        <enum>QDateTimeEdit::MinuteSection</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QDateEdit" name="dateFrom">
-       <property name="alignment">
-        <set>Qt::AlignJustify|Qt::AlignVCenter</set>
-       </property>
-       <property name="calendarPopup">
-        <bool>true</bool>
-       </property>
-       <property name="currentSectionIndex">
-        <number>0</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QDateEdit" name="dateTo">
-       <property name="calendarPopup">
-        <bool>true</bool>
+       <property name="text">
+        <string>Выберите тип площадки</string>
        </property>
       </widget>
      </item>
@@ -282,7 +307,7 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>700</x>
+      <x>640</x>
       <y>430</y>
       <width>431</width>
       <height>190</height>
@@ -344,7 +369,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="clearData">
+      <widget class="QPushButton" name="clearDataButton">
        <property name="font">
         <font>
          <pointsize>12</pointsize>
@@ -360,7 +385,7 @@
    <widget class="QWidget" name="verticalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>700</x>
+      <x>640</x>
       <y>30</y>
       <width>431</width>
       <height>351</height>
@@ -418,9 +443,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>470</y>
-      <width>631</width>
-      <height>151</height>
+      <y>510</y>
+      <width>581</width>
+      <height>111</height>
      </rect>
     </property>
     <property name="font">
