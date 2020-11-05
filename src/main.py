@@ -31,10 +31,17 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.addToOrderButton.clicked.connect(self.add_to_order_button_clicked)
         self.formTicketsButton.clicked.connect(self.form_ticket_button_clicked)
         self.cancelButton.clicked.connect(self.cancel_button_clicked)
+        self.clearDataButton.clicked.connect(self.clear_data)
         self.dateFrom.setDate(datetime.date.today())
         self.dateTo.setDate(datetime.date.today())
-        self.eventSiteChoice.addItems(event_sites_list())
+        self.dateFrom.dateChanged.connect(self.date_time_is_changed)
+        self.dateTo.dateChanged.connect(self.date_time_is_changed)
+        self.timeFrom.timeChanged.connect(self.date_time_is_changed)
+        self.timeTo.timeChanged.connect(self.date_time_is_changed)
+        self.eventSiteTypeChoice.addItems(event_site_types_list())
+        self.eventSiteTypeChoice.activated.connect(self.event_site_type_choose)
         self.eventSiteChoice.activated.connect(self.event_site_choose)
+        self.eventTypeChoice.activated.connect(self.event_type_choose)
         self.eventChoice.activated.connect(self.event_choose)
         self.rowChoice.activated.connect(self.row_choose)
         self.placeChoice.activated.connect(self.place_choose)
@@ -64,17 +71,46 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             ticket_unreserved(int(i))
         self.ticketsList.clear()
 
-    def event_site_choose(self):
+    def clear_data(self):
+        self.firstName.clear()
+        self.lastName.clear()
+        self.email.clear()
+
+    def date_time_is_changed(self):
         self.eventChoice.clear()
         self.rowChoice.clear()
         self.placeChoice.clear()
+        self.eventTypeChoice.clear()
         self.ticketPrice.setText('0')
-        self.eventChoice.addItems(events_list(self.eventSiteChoice.currentText()))
+
+    def event_site_type_choose(self):
+        self.date_time_is_changed()
+        self.eventSiteChoice.clear()
+        self.eventChoice.clear()
+        self.eventSiteChoice.addItems(event_sites_list(self.eventSiteTypeChoice.currentText()))
+
+    def event_site_choose(self):
+        self.date_time_is_changed()
+        date_from, date_to, time_from, time_to = self.get_date_time()
+        event_site = self.eventSiteChoice.currentText()
+        event_types = event_types_list(event_site, date_from, date_to, time_from, time_to)
+        self.eventTypeChoice.addItems(event_types)
+
+    def event_type_choose(self):
+        event_site = self.eventSiteChoice.currentText()
+        event_type = self.eventTypeChoice.currentText()
+        if event_type:
+            date_from, date_to, time_from, time_to = self.get_date_time()
+            events = events_list(event_site, event_type, date_from, date_to, time_from, time_to)
+            self.eventChoice.clear()
+            self.eventChoice.addItems(events)
 
     def event_choose(self):
-        rows = rows_list(self.eventChoice.currentText())
-        self.rowChoice.clear()
-        self.rowChoice.addItems(rows)
+        event = self.eventChoice.currentText()
+        if event:
+            rows = rows_list(event)
+            self.rowChoice.clear()
+            self.rowChoice.addItems(rows)
 
     def row_choose(self):
         event = self.eventChoice.currentText()
@@ -89,6 +125,13 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         event = self.eventChoice.currentText()
         ticket = find_ticket(event, row, place)
         self.ticketPrice.setText(str(ticket[1]))
+
+    def get_date_time(self):
+        date_from = str(self.dateFrom.date().toPyDate())
+        date_to = str(self.dateTo.date().toPyDate())
+        time_from = str(self.timeFrom.time().toPyTime())
+        time_to = str(self.timeTo.time().toPyTime())
+        return date_from, date_to, time_from, time_to
 
 
 def main():
