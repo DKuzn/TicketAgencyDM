@@ -21,17 +21,40 @@ dbase = sqlite3.connect('../resources/TicketAgencyDB.db')
 cursor = dbase.cursor()
 
 
-def event_sites_list():
-    cursor.execute("SELECT Название FROM Площадка")
+def event_site_types_list():
+    cursor.execute("SELECT Тип FROM Площадка")
+    event_site_types = cursor.fetchall()
+    event_site_type_list = [i[0] for i in event_site_types]
+    return event_site_type_list
+
+
+def event_sites_list(event_site_type: str):
+    cursor.execute("SELECT Название FROM Площадка WHERE Тип == '%s'" % event_site_type)
     event_sites = cursor.fetchall()
     event_site_list = [i[0] for i in event_sites]
     return event_site_list
 
 
-def events_list(event_site: str):
+def event_types_list(event_site: str, date_from: str, date_to: str, time_from: str, time_to: str):
     cursor.execute("SELECT УИН_Площадки FROM Площадка WHERE Название = '%s'" % event_site)
     uin_event_site = cursor.fetchone()
-    cursor.execute("SELECT Название FROM Мероприятие WHERE УИН_Площадки = '%s'" % uin_event_site)
+    cursor.execute("SELECT Тип_мероприятия FROM Мероприятие "
+                   "WHERE УИН_Площадки = '%s' AND Дата BETWEEN '%s' AND '%s' "
+                   "AND Время BETWEEN '%s' AND '%s'" % (uin_event_site[0], date_from, date_to, time_from, time_to))
+    event_types = cursor.fetchall()
+    event_type_list = [i[0] for i in event_types]
+    event_type_list = list(set(event_type_list))
+    return event_type_list
+
+
+def events_list(event_site: str, event_type: str, date_from: str, date_to: str, time_from: str, time_to: str):
+    cursor.execute("SELECT УИН_Площадки FROM Площадка WHERE Название = '%s'" % event_site)
+    uin_event_site = cursor.fetchone()
+    cursor.execute("SELECT Название FROM Мероприятие "
+                   "WHERE УИН_Площадки = '%s' AND Тип_мероприятия = '%s' "
+                   "AND Дата BETWEEN '%s' AND '%s' "
+                   "AND Время BETWEEN '%s' AND '%s'"
+                   % (uin_event_site[0], event_type, date_from, date_to, time_from, time_to))
     events = cursor.fetchall()
     event_list = [i[0] for i in events]
     return event_list
@@ -103,9 +126,4 @@ def add_client(email: str, first_name: str = None, last_name: str = None):
 
 
 if __name__ == '__main__':
-    event_site = event_sites_list()
-    event = events_list(event_site[0])
-    print(tickets_list(event[0]))
-    row = rows_list(event[0])
-    print(places_list(event[0], row[0]))
-    print(find_ticket(event[0], '1', '1'))
+    print('Test')
