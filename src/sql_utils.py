@@ -116,12 +116,43 @@ def buy_ticket(ticket: int, order: int):
     dbase.commit()
 
 
-def add_client(email: str, first_name: str = None, last_name: str = None):
+def add_client(email: str, first_name: str, last_name: str):
     cursor.execute("INSERT INTO Клиент (Email) VALUES ('%s')" % email)
-    if first_name is not None:
+    if not first_name == '':
         cursor.execute("UPDATE Клиент SET Имя = '%s' WHERE Email = '%s'" % (first_name, email))
-    if last_name is not None:
+    if not last_name == '':
         cursor.execute("UPDATE Клиент SET Фамилия = '%s' WHERE Email = '%s'" % (last_name, email))
+    dbase.commit()
+
+
+def find_client(email: str):
+    cursor.execute("SELECT УИН_Клиента FROM Клиент WHERE Email = '%s'" % email)
+    uin_client = cursor.fetchone()
+    if uin_client is None:
+        return uin_client
+    else:
+        return uin_client[0]
+
+
+def find_last_order(uin_client: int):
+    cursor.execute("SELECT УИН_Заказа FROM Заказ WHERE УИН_Клиента = '%s'" % uin_client)
+    uin_orders = cursor.fetchall()
+    uin_orders = [i[0] for i in uin_orders]
+    return uin_orders.pop()
+
+
+def add_order_for_old(uin_client: int):
+    uin_order = find_last_order(uin_client) + 1
+    cursor.execute("INSERT INTO Заказ (УИН_Заказа, УИН_Клиента, Оплачен) "
+                   "VALUES ('%s', '%s', 1)" % (uin_order, uin_client))
+    dbase.commit()
+
+
+def add_order_for_new(uin_client: int):
+    uin = str(uin_client) + '0000000001'
+    uin_order = int(uin)
+    cursor.execute("INSERT INTO Заказ (УИН_Заказа, УИН_Клиента, Оплачен) "
+                   "VALUES ('%s', '%s', 1)" % (uin_order, uin_client))
     dbase.commit()
 
 
