@@ -20,12 +20,14 @@ from PyQt5 import QtWidgets
 from sql_utils import *
 import mainwindow
 import datetime
+import re
 
 
 class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
     def __init__(self):
         super(TicketAgencyApp, self).__init__()
         self.order_list = []
+        self.order_is_payed = False
         self.setupUi(self)
         self.payButton.clicked.connect(self.pay_button_clicked)
         self.addToOrderButton.clicked.connect(self.add_to_order_button_clicked)
@@ -47,7 +49,27 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.placeChoice.activated.connect(self.place_choose)
 
     def pay_button_clicked(self):
-        pass
+        if not self.order_is_payed and not self.order_list == []:
+            first_name = self.firstName.text()
+            last_name = self.lastName.text()
+            email = self.email.text()
+            if email == '':
+                self.email.setText('Введите E-mail')
+            email_is_valid = self.check_email(email)
+            if email_is_valid:
+                email = email.lower()
+                uin_client = find_client(email)
+                if uin_client is None:
+                    add_client(email, first_name, last_name)
+                    uin_client = find_client(email)
+                    add_order_for_new(uin_client)
+                else:
+                    add_order_for_old(uin_client)
+
+                last_order = find_last_order(uin_client)
+                for ticket in self.order_list:
+                    buy_ticket(ticket, last_order)
+                self.order_is_payed = True
 
     def add_to_order_button_clicked(self):
         event = self.eventChoice.currentText()
@@ -67,9 +89,11 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         pass
 
     def cancel_button_clicked(self):
-        for i in self.order_list:
-            ticket_unreserved(int(i))
-        self.ticketsList.clear()
+        if not self.order_is_payed:
+            for i in self.order_list:
+                ticket_unreserved(int(i))
+            self.order_list = []
+            self.ticketsList.clear()
 
     def clear_data(self):
         self.firstName.clear()
@@ -132,6 +156,14 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         time_from = str(self.timeFrom.time().toPyTime())
         time_to = str(self.timeTo.time().toPyTime())
         return date_from, date_to, time_from, time_to
+
+    @staticmethod
+    def check_email(email: str):
+        email_template = '^[0-9A-Za-z]+[\._]?[0-9A-Za-z]+[@]\w+[.]\w+$'
+        if re.search(email_template, email):
+            return True
+        else:
+            return False
 
 
 def main():
