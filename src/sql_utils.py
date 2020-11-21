@@ -69,6 +69,12 @@ def tickets_list(event: str):
     return ticket_list
 
 
+def event_date_time(event: str):
+    cursor.execute("SELECT Дата, Время FROM Мероприятие WHERE Название = '%s'" % event)
+    date_time = cursor.fetchone()
+    return date_time
+
+
 def rows_list(event: str):
     cursor.execute("SELECT УИН_Мероприятия FROM Мероприятие WHERE Название = '%s'" % event)
     uin_event = cursor.fetchone()
@@ -144,7 +150,7 @@ def find_last_order(uin_client: int):
 def add_order_for_old(uin_client: int):
     uin_order = find_last_order(uin_client) + 1
     cursor.execute("INSERT INTO Заказ (УИН_Заказа, УИН_Клиента, Оплачен) "
-                   "VALUES ('%s', '%s', 1)" % (uin_order, uin_client))
+                   "VALUES ('%s', '%s', 0)" % (uin_order, uin_client))
     dbase.commit()
 
 
@@ -152,9 +158,31 @@ def add_order_for_new(uin_client: int):
     uin = str(uin_client) + '0000000001'
     uin_order = int(uin)
     cursor.execute("INSERT INTO Заказ (УИН_Заказа, УИН_Клиента, Оплачен) "
-                   "VALUES ('%s', '%s', 1)" % (uin_order, uin_client))
+                   "VALUES ('%s', '%s', 0)" % (uin_order, uin_client))
+    dbase.commit()
+
+
+def pay_order(uin_order: int):
+    cursor.execute("UPDATE Заказ SET Оплачен = 1 WHERE УИН_Заказа = '%s'" % uin_order)
+    dbase.commit()
+
+
+def get_ticket_info(uin_ticket: int):
+    cursor.execute("SELECT Тип_мероприятия, Мероприятие.Название, Площадка.Название, "
+                   "Дата, Время, Номер_ряда, Номер_места, Цена FROM Билет "
+                   "JOIN Мероприятие ON Билет.УИН_Мероприятия = Мероприятие.УИН_Мероприятия "
+                   "JOIN Площадка on Площадка.УИН_Площадки = Мероприятие.УИН_Площадки "
+                   "WHERE Номер_билета = '%s'" % uin_ticket)
+    ticket_info = cursor.fetchone()
+    return ticket_info
+
+
+def delete_order(uin_order: int):
+    cursor.execute("DELETE FROM Заказ WHERE УИН_Заказа = '%s' AND Оплачен = 0" % uin_order)
     dbase.commit()
 
 
 if __name__ == '__main__':
     print('Test')
+    print(event_date_time('Звездные войны'))
+    print(get_ticket_info(10010001))
