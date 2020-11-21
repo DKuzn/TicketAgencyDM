@@ -28,7 +28,11 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         super(TicketAgencyApp, self).__init__()
         self.order_list = []
         self.order_is_payed = False
+        self.email_is_valid = False
+        self.temp_email = ''
+        self.total_cost = 0
         self.setupUi(self)
+        self.newOrderButton.clicked.connect(self.new_order_button_clicked)
         self.payButton.clicked.connect(self.pay_button_clicked)
         self.addToOrderButton.clicked.connect(self.add_to_order_button_clicked)
         self.formTicketsButton.clicked.connect(self.form_ticket_button_clicked)
@@ -48,28 +52,46 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.rowChoice.activated.connect(self.row_choose)
         self.placeChoice.activated.connect(self.place_choose)
 
-    def pay_button_clicked(self):
-        if not self.order_is_payed and not self.order_list == []:
-            first_name = self.firstName.text()
-            last_name = self.lastName.text()
-            email = self.email.text()
-            if email == '':
-                self.email.setText('Введите E-mail')
-            email_is_valid = self.check_email(email)
-            if email_is_valid:
+    def new_order_button_clicked(self):
+        self.order_is_payed = False
+        first_name = self.firstName.text()
+        last_name = self.lastName.text()
+        email = self.email.text()
+        self.order_list = []
+        self.ticketsList.setRowCount(0)
+        if email == '':
+            self.email.setText('Введите E-mail')
+        elif not email == 'Введите E-mail':
+            self.email_is_valid = self.check_email(email)
+            if self.email_is_valid:
                 email = email.lower()
-                uin_client = find_client(email)
+                self.temp_email = email
+                uin_client = find_client(self.temp_email)
                 if uin_client is None:
                     add_client(email, first_name, last_name)
                     uin_client = find_client(email)
                     add_order_for_new(uin_client)
                 else:
                     add_order_for_old(uin_client)
+                self.orderStatus.setStyleSheet('color: blue')
+                self.orderStatus.setText('Создан')
+                self.addToOrderButton.setEnabled(True)
+                self.payButton.setEnabled(True)
+                self.cancelButton.setEnabled(True)
+            elif not self.email_is_valid:
+                self.email.setText('Некорректный E-mail')
 
-                last_order = find_last_order(uin_client)
-                for ticket in self.order_list:
-                    buy_ticket(ticket, last_order)
-                self.order_is_payed = True
+    def pay_button_clicked(self):
+        if not self.order_is_payed and not self.order_list == []:
+            uin_client = find_client(self.temp_email)
+            last_order = find_last_order(uin_client)
+            for ticket in self.order_list:
+                buy_ticket(ticket, last_order)
+            pay_order(last_order)
+            self.order_is_payed = True
+            self.orderStatus.setStyleSheet('color: green')
+            self.orderStatus.setText('Оплачен')
+            self.formTicketsButton.setEnabled(True)
 
     def add_to_order_button_clicked(self):
         event = self.eventChoice.currentText()
@@ -79,8 +101,8 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             ticket = find_ticket(event, row, place)
             ticket_reservation(ticket[0])
             self.order_list.append(str(ticket[0]))
-            self.ticketsList.clear()
-            self.ticketsList.addItems(self.order_list)
+            self.add_ticket_to_list(ticket[0])
+            self.totalCost.setText(str(self.total_cost))
             self.row_choose()
         elif not place:
             self.event_choose()
@@ -93,12 +115,27 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             for i in self.order_list:
                 ticket_unreserved(int(i))
             self.order_list = []
-            self.ticketsList.clear()
+            self.ticketsList.setRowCount(0)
+            uin_client = find_client(self.temp_email)
+            last_order = find_last_order(uin_client)
+            delete_order(last_order)
+            self.total_cost = 0
+            self.totalCost.setText('0')
+            self.orderStatus.setStyleSheet('color: red')
+            self.orderStatus.setText('Отменен')
 
     def clear_data(self):
         self.firstName.clear()
         self.lastName.clear()
         self.email.clear()
+
+    def add_ticket_to_list(self, uin_ticket):
+        row_number = len(self.order_list)
+        self.ticketsList.setRowCount(row_number)
+        info = get_ticket_info(uin_ticket)
+        self.total_cost += info[7]
+        for idx, i in enumerate(info):
+            self.ticketsList.setItem(row_number - 1, idx, QtWidgets.QTableWidgetItem(str(i)))
 
     def date_time_is_changed(self):
         self.eventChoice.clear()
@@ -135,6 +172,12 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             rows = rows_list(event)
             self.rowChoice.clear()
             self.rowChoice.addItems(rows)
+            self.eventDate.clear()
+            date, time = event_date_time(event)
+            date = datetime.date.fromisoformat(date)
+            date = date.strftime('%d.%m.%Y')
+            self.eventDate.setText(str(date))
+            self.eventTime.setText(time)
 
     def row_choose(self):
         event = self.eventChoice.currentText()
