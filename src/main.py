@@ -21,6 +21,7 @@ from sql_utils import *
 import mainwindow
 import datetime
 import re
+from form_tickets import get_a4
 
 
 class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
@@ -35,7 +36,7 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.newOrderButton.clicked.connect(self.new_order_button_clicked)
         self.payButton.clicked.connect(self.pay_button_clicked)
         self.addToOrderButton.clicked.connect(self.add_to_order_button_clicked)
-        self.formTicketsButton.clicked.connect(self.form_ticket_button_clicked)
+        self.formTicketsButton.clicked.connect(self.form_tickets_button_clicked)
         self.cancelButton.clicked.connect(self.cancel_button_clicked)
         self.clearDataButton.clicked.connect(self.clear_data)
         self.dateFrom.setDate(datetime.date.today())
@@ -54,6 +55,7 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
     def new_order_button_clicked(self):
         self.order_is_payed = False
+        self.formTicketsButton.setEnabled(False)
         first_name = self.firstName.text()
         last_name = self.lastName.text()
         email = self.email.text()
@@ -107,8 +109,9 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         elif not place:
             self.event_choose()
 
-    def form_ticket_button_clicked(self):
-        pass
+    def form_tickets_button_clicked(self):
+        tickets = get_a4(self.order_list)
+        tickets.show()
 
     def cancel_button_clicked(self):
         if not self.order_is_payed:
