@@ -112,7 +112,7 @@ def ticket_reservation(ticket: int):
 
 
 def ticket_unreserved(ticket: int):
-    cursor.execute("UPDATE Билет SET Забронирован = 0 WHERE Номер_билета = '%s'" % ticket)
+    cursor.execute("UPDATE Билет SET Забронирован = 0 WHERE Номер_билета = '%s' AND УИН_Заказа IS NULL" % ticket)
     dbase.commit()
 
 
@@ -144,7 +144,10 @@ def find_last_order(uin_client: int):
     cursor.execute("SELECT УИН_Заказа FROM Заказ WHERE УИН_Клиента = '%s'" % uin_client)
     uin_orders = cursor.fetchall()
     uin_orders = [i[0] for i in uin_orders]
-    return uin_orders.pop()
+    if uin_orders:
+        return uin_orders.pop()
+    else:
+        return None
 
 
 def add_order_for_old(uin_client: int):
