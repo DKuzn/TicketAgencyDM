@@ -30,6 +30,7 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.order_list = []
         self.order_is_payed = False
         self.email_is_valid = False
+        self.max_tickets = 12
         self.temp_email = ''
         self.total_cost = 0
         self.setupUi(self)
@@ -54,12 +55,16 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.placeChoice.activated.connect(self.place_choose)
 
     def new_order_button_clicked(self):
+        if not self.order_is_payed:
+            self.cancel_button_clicked()
+            self.order_list = []
+        else:
+            self.order_list = []
         self.order_is_payed = False
         self.formTicketsButton.setEnabled(False)
         first_name = self.firstName.text()
         last_name = self.lastName.text()
         email = self.email.text()
-        self.order_list = []
         self.ticketsList.setRowCount(0)
         if email == '':
             self.email.setText('Введите E-mail')
@@ -74,7 +79,10 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                     uin_client = find_client(email)
                     add_order_for_new(uin_client)
                 else:
-                    add_order_for_old(uin_client)
+                    if find_last_order(uin_client) is None:
+                        add_order_for_new(uin_client)
+                    else:
+                        add_order_for_old(uin_client)
                 self.orderStatus.setStyleSheet('color: blue')
                 self.orderStatus.setText('Создан')
                 self.addToOrderButton.setEnabled(True)
@@ -102,10 +110,11 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         if event and row and place:
             ticket = find_ticket(event, row, place)
             ticket_reservation(ticket[0])
-            self.order_list.append(str(ticket[0]))
-            self.add_ticket_to_list(ticket[0])
-            self.totalCost.setText(str(self.total_cost))
-            self.row_choose()
+            if len(self.order_list) < self.max_tickets:
+                self.order_list.append(str(ticket[0]))
+                self.add_ticket_to_list(ticket[0])
+                self.totalCost.setText(str(self.total_cost))
+                self.row_choose()
         elif not place:
             self.event_choose()
 
@@ -126,6 +135,9 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
             self.totalCost.setText('0')
             self.orderStatus.setStyleSheet('color: red')
             self.orderStatus.setText('Отменен')
+            self.cancelButton.setEnabled(False)
+            self.addToOrderButton.setEnabled(False)
+            self.payButton.setEnabled(False)
 
     def clear_data(self):
         self.firstName.clear()
