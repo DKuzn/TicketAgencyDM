@@ -123,8 +123,9 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
     def form_tickets_button_clicked(self):
         tickets = get_a4(self.order_list)
-        tmp = tempfile.NamedTemporaryFile(delete=False)
+        tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
         tickets[0].save(tmp, format='PDF', resolution=100.0, save_all=True, append_images=tickets[1:])
+        tmp.close()
         if platform.system() == 'Linux':
             os.system('xdg-open ' + tmp.name)
         elif platform.system() == 'Windows':
