@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+import tempfile
+import os
 from PyQt5 import QtWidgets
 from sql_utils import *
 import mainwindow
@@ -120,7 +122,12 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
     def form_tickets_button_clicked(self):
         tickets = get_a4(self.order_list)
-        tickets.show()
+        tmp = tempfile.NamedTemporaryFile(delete=False)
+        tickets[0].save(tmp, format='PDF', resolution=100.0, save_all=True, append_images=tickets[1:])
+        try:
+            os.system('xdg-open ' + tmp.name)
+        except OSError:
+            os.system(tmp.name)
 
     def cancel_button_clicked(self):
         if not self.order_is_payed:
