@@ -18,10 +18,11 @@
 import psycopg2
 
 dbase = psycopg2.connect(
-    host='10.88.25.25',
+    host='localhost',  # ip-address to server with PostgresQL
     database='ticketagencydb',
     user='postgres',
-    password='mypass')
+    password='mypass',
+    port='5432')
 
 cursor = dbase.cursor()
 
