@@ -1,29 +1,30 @@
 import psycopg2
 
 
-def get_cursor(database: str, user: str, password: str, host: str):
+def get_cursor(database: str, user: str, password: str, host: str, port: str = '5432'):
     dbase = psycopg2.connect(
         database=database,
         user=user,
         password=password,
-        host=host)
+        host=host,
+        port=port)
     dbase.autocommit = True
     cursor = dbase.cursor()
     return cursor
 
 
-def get_database():
+def get_database(host: str = 'localhost'):
     conn = get_cursor(database='postgres',
                       user='postgres',
                       password='mypass',
-                      host='10.88.25.25')
+                      host=host)
 
     conn.execute('create database ticketagencydb;')
 
     conn = get_cursor(database='ticketagencydb',
                       user='postgres',
                       password='mypass',
-                      host='10.88.25.25')
+                      host=host)
 
     conn.execute('create schema main;')
 
