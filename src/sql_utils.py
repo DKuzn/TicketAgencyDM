@@ -203,7 +203,7 @@ def get_ticket_info(uin_ticket: int):
                    'main."Билет"."Номер_ряда", main."Билет"."Номер_места", main."Билет"."Цена" FROM main."Билет" '
                    'JOIN main."Мероприятие" ON main."Билет"."УИН_Мероприятия" = main."Мероприятие"."УИН_Мероприятия" '
                    'JOIN main."Площадка" ON main."Площадка"."УИН_Площадки" = main."Мероприятие"."УИН_Площадки" '
-                   'WHERE main."Билет".Номер_билета = %s', (uin_ticket,))
+                   'WHERE main."Билет"."Номер_билета" = %s', (uin_ticket,))
     ticket_info = cursor.fetchone()
     return ticket_info
 
@@ -214,7 +214,29 @@ def delete_order(uin_order: int):
     dbase.commit()
 
 
+def list_tables():
+    cursor.execute(f'SELECT table_name FROM information_schema.tables WHERE table_schema = \'main\'')
+    tables = cursor.fetchall()
+    tables = [i[0] for i in tables]
+    return tables
+
+
+def get_table(table_name: str):
+    cursor.execute(f'SELECT * FROM main.{table_name}')
+    colums = tuple(desc[0] for desc in cursor.description)
+    content = cursor.fetchall()
+    content.insert(0, colums)
+    return content
+
+
+def add_event_site(event_site: str, event_site_type: str):
+    cursor.execute('INSERT INTO main."Площадка"("Тип", "Название")  VALUES (%s, %s)', (event_site_type, event_site,))
+    dbase.commit()
+
+
 if __name__ == '__main__':
     print('Test')
     print(event_date_time('Звездные войны'))
     print(get_ticket_info(10010001))
+    print(list_tables())
+    print(get_table('Площадка'))
