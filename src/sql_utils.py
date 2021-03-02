@@ -70,12 +70,34 @@ def events_list(event_site: str, event_type: str, date_from: str, date_to: str, 
     return event_list
 
 
-def tickets_list(event: str):
+def available_tickets_list(event: str):
     cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" FROM main."Мероприятие" '
                    'WHERE main."Мероприятие"."Название" = %s', (event,))
     uin_event = cursor.fetchone()
     cursor.execute('SELECT main."Билет"."Номер_билета" FROM main."Билет" '
                    'WHERE main."Билет"."УИН_Мероприятия" = %s AND main."Билет"."Забронирован" = 0', (uin_event,))
+    tickets = cursor.fetchall()
+    ticket_list = [i[0] for i in tickets]
+    return ticket_list
+
+
+def tickets_list(event: str):
+    cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" FROM main."Мероприятие" '
+                   'WHERE main."Мероприятие"."Название" = %s', (event,))
+    uin_event = cursor.fetchone()
+    cursor.execute('SELECT main."Билет"."Номер_билета" FROM main."Билет" '
+                   'WHERE main."Билет"."УИН_Мероприятия" = %s', (uin_event,))
+    tickets = cursor.fetchall()
+    ticket_list = [i[0] for i in tickets]
+    return ticket_list
+
+
+def sold_tickets_list(event: str):
+    cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" FROM main."Мероприятие" '
+                   'WHERE main."Мероприятие"."Название" = %s', (event,))
+    uin_event = cursor.fetchone()
+    cursor.execute('SELECT main."Билет"."Номер_билета" FROM main."Билет" '
+                   'WHERE main."Билет"."УИН_Мероприятия" = %s AND "УИН_Заказа" IS NOT NULL', (uin_event,))
     tickets = cursor.fetchall()
     ticket_list = [i[0] for i in tickets]
     return ticket_list
