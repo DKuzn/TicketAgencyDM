@@ -62,6 +62,11 @@
      </item>
      <item row="11" column="0">
       <widget class="QLabel" name="label_6">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Доступно к покупке</string>
        </property>
@@ -99,6 +104,11 @@
      </item>
      <item row="12" column="1" colspan="2">
       <widget class="QLabel" name="soldTicketsCount">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -175,6 +185,11 @@
      </item>
      <item row="11" column="1" colspan="2">
       <widget class="QLabel" name="availableTicketsCount">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -285,6 +300,11 @@
      </item>
      <item row="10" column="1" colspan="2">
       <widget class="QLabel" name="allTicketsCount">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string/>
        </property>
@@ -370,13 +390,24 @@
     <layout class="QGridLayout" name="choiceTables">
      <item row="0" column="0">
       <widget class="QLabel" name="label_4">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>Выберите таблицу</string>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QComboBox" name="choiceTable"/>
+      <widget class="QComboBox" name="choiceTable">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+      </widget>
      </item>
      <item row="1" column="0" colspan="2">
       <widget class="QTableWidget" name="viewTable"/>
@@ -391,6 +422,11 @@
       <width>641</width>
       <height>321</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
     </property>
     <property name="currentIndex">
      <number>1</number>
@@ -463,10 +499,21 @@
       </property>
       <layout class="QGridLayout" name="addEvent">
        <item row="0" column="2" colspan="2">
-        <widget class="QComboBox" name="eventSiteChoiceTool"/>
+        <widget class="QComboBox" name="eventSiteChoiceTool">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+        </widget>
        </item>
        <item row="5" column="0" colspan="4">
         <widget class="QPushButton" name="addEventButton">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Добавить</string>
          </property>
@@ -474,6 +521,11 @@
        </item>
        <item row="4" column="2">
         <widget class="QLabel" name="label_13">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Количество мест</string>
          </property>
@@ -481,6 +533,11 @@
        </item>
        <item row="0" column="0" colspan="2">
         <widget class="QLabel" name="label_5">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Выберите площадку</string>
          </property>
@@ -488,6 +545,11 @@
        </item>
        <item row="4" column="0">
         <widget class="QLabel" name="label_8">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Количество рядов</string>
          </property>
@@ -495,6 +557,11 @@
        </item>
        <item row="4" column="1">
         <widget class="QSpinBox" name="rowsCount">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
          <property name="minimum">
           <number>1</number>
          </property>
@@ -505,6 +572,11 @@
        </item>
        <item row="4" column="3">
         <widget class="QSpinBox" name="placesCount">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
          <property name="minimum">
           <number>1</number>
          </property>
@@ -515,6 +587,11 @@
        </item>
        <item row="1" column="0" colspan="4">
         <widget class="QLineEdit" name="eventName">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
          <property name="placeholderText">
           <string>Название</string>
          </property>
@@ -522,6 +599,11 @@
        </item>
        <item row="2" column="0" colspan="4">
         <widget class="QLineEdit" name="eventType">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
          <property name="placeholderText">
           <string>Тип</string>
          </property>
@@ -529,6 +611,11 @@
        </item>
        <item row="3" column="0">
         <widget class="QLabel" name="label_20">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Дата</string>
          </property>
@@ -536,6 +623,11 @@
        </item>
        <item row="3" column="2">
         <widget class="QLabel" name="label_21">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>Время</string>
          </property>
@@ -543,13 +635,24 @@
        </item>
        <item row="3" column="1">
         <widget class="QDateEdit" name="eventDateChoice">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
          <property name="calendarPopup">
           <bool>true</bool>
          </property>
         </widget>
        </item>
        <item row="3" column="3">
-        <widget class="QTimeEdit" name="eventTimeChoice"/>
+        <widget class="QTimeEdit" name="eventTimeChoice">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
