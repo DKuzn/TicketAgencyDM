@@ -31,11 +31,12 @@ def get_database(host: str = 'localhost'):
     conn.execute("""
     create table main."Площадка"
     (
-        "УИН_Площадки" integer not null
+        "УИН_Площадки" serial not null
             constraint площадка_pk
                 primary key,
         "Тип"          text    not null,
-        "Название"     text    not null
+        "Название"     text    not null,
+        unique         ("Тип", "Название")
     );
     
     alter table main."Площадка"
@@ -46,7 +47,7 @@ def get_database(host: str = 'localhost'):
     
     create table main."Мероприятие"
     (
-        "УИН_Мероприятия" integer not null
+        "УИН_Мероприятия" serial not null
             constraint мероприятие_pk
                 primary key,
         "УИН_Площадки"    integer not null
@@ -55,7 +56,8 @@ def get_database(host: str = 'localhost'):
         "Название"        text    not null,
         "Тип_мероприятия" text    not null,
         "Дата"            text    not null,
-        "Время"           text    not null
+        "Время"           text    not null,
+        unique            ("Название", "Тип_мероприятия")
     );
     
     alter table main."Мероприятие"
@@ -85,7 +87,7 @@ def get_database(host: str = 'localhost'):
     
     create table main."Заказ"
     (
-        "УИН_Заказа"  integer not null
+        "УИН_Заказа"  serial not null
             constraint заказ_pk
                 primary key,
         "УИН_Клиента" integer not null
@@ -102,7 +104,7 @@ def get_database(host: str = 'localhost'):
     
     create table main."Билет"
     (
-        "Номер_билета"    integer not null
+        "Номер_билета"    serial not null
             constraint билет_pk
                 primary key,
         "УИН_Мероприятия" integer not null
