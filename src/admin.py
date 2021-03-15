@@ -3,12 +3,14 @@ from PyQt5 import QtWidgets
 from sql_utils import *
 import admin_ui
 import datetime
+import json
 
 
 class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
     def __init__(self):
         super(TicketAgencyAdmin, self).__init__()
         self.setupUi(self)
+        self.types = json.load(open('../resources/types.json', 'r'))
         self.dateFrom.setDate(datetime.date.today())
         self.dateTo.setDate(datetime.date.today())
         self.eventDateChoice.setDate(datetime.date.today())
@@ -25,6 +27,9 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         self.choiceTable.activated.connect(self.table_choose)
         self.addEventSiteButton.clicked.connect(self.add_event_site_button_clicked)
         self.addEventButton.clicked.connect(self.add_event_button_clicked)
+        self.eventSiteType.addItems(self.types)
+        self.eventSiteTypeChoiceTool.addItems(self.types)
+        self.eventSiteTypeChoiceTool.activated.connect(self.event_site_type_tool_choose)
 
     def date_time_is_changed(self):
         self.eventChoice.clear()
@@ -86,19 +91,33 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         self.viewTable.setColumnCount(len(header))
         self.viewTable.setRowCount(len(content))
         self.viewTable.setHorizontalHeaderLabels(header)
-        self.viewTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.viewTable.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.viewTable.horizontalHeader().setVisible(True)
         for i, item in enumerate(content):
             for j, idx in enumerate(item):
                 self.viewTable.setItem(i, j, QtWidgets.QTableWidgetItem(str(idx)))
 
+    def event_site_type_tool_choose(self):
+        event_site_type = self.eventSiteTypeChoiceTool.currentText()
+        event_site_list = event_sites_list(event_site_type)
+        self.eventSiteChoiceTool.clear()
+        self.eventSiteChoiceTool.addItems(event_site_list)
+        self.eventTypeChoiceTool.clear()
+        self.eventTypeChoiceTool.addItems(self.types[event_site_type])
+
     def add_event_site_button_clicked(self):
         event_site_name = self.eventSiteName.text()
-        event_site_type = self.eventSiteType.text()
+        event_site_type = self.eventSiteType.currentText()
         add_event_site(event_site_name, event_site_type)
 
     def add_event_button_clicked(self):
-        pass
+        event_site_type = self.eventSiteTypeChoiceTool.currentText()
+        event_site = self.eventSiteChoiceTool.currentText()
+        event_type = self.eventTypeChoiceTool.currentText()
+        event_name = self.eventName.text()
+        event_date = str(self.eventDateChoice.date().toPyDate())
+        event_time = str(self.eventTimeChoice.time().toPyTime().strftime('%H:%M'))
+        add_event(event_site, event_site_type, event_type, event_name, event_date, event_time)
 
 
 def main():
