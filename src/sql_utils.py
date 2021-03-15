@@ -31,6 +31,7 @@ def event_site_types_list():
     cursor.execute('SELECT main."Площадка"."Тип" FROM main."Площадка"')
     event_site_types = cursor.fetchall()
     event_site_type_list = [i[0] for i in event_site_types]
+    event_site_type_list = list(set(event_site_type_list))
     return event_site_type_list
 
 
@@ -245,14 +246,24 @@ def list_tables():
 
 def get_table(table_name: str):
     cursor.execute(f'SELECT * FROM main.{table_name}')
-    colums = tuple(desc[0] for desc in cursor.description)
+    columns = tuple(desc[0] for desc in cursor.description)
     content = cursor.fetchall()
-    content.insert(0, colums)
+    content.insert(0, columns)
     return content
 
 
 def add_event_site(event_site: str, event_site_type: str):
     cursor.execute('INSERT INTO main."Площадка"("Тип", "Название")  VALUES (%s, %s)', (event_site_type, event_site,))
+    dbase.commit()
+
+
+def add_event(event_site: str, event_site_type: str, event_type: str, event_name: str, event_date: str, event_time: str):
+    cursor.execute('SELECT main."Площадка"."УИН_Площадки" FROM main."Площадка" '
+                   'WHERE main."Площадка"."Название" = %s AND main."Площадка"."Тип" = %s', (event_site, event_site_type,))
+    uin_event_site = cursor.fetchone()
+    cursor.execute('INSERT INTO main."Мероприятие"("УИН_Площадки", '
+                   '"Название", "Тип_мероприятия", "Дата", "Время") '
+                   'VALUES (%s, %s, %s, %s, %s)', (uin_event_site[0], event_name, event_type, event_date, event_time))
     dbase.commit()
 
 
