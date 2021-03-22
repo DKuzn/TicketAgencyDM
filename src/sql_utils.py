@@ -267,6 +267,21 @@ def add_event(event_site: str, event_site_type: str, event_type: str, event_name
     dbase.commit()
 
 
+def add_ticket(event_site: str, event_site_type: str, event_type: str, event_name: str, row: int, place: int, price: float):
+    cursor.execute('SELECT main."Площадка"."УИН_Площадки" FROM main."Площадка" '
+                   'WHERE main."Площадка"."Название" = %s AND main."Площадка"."Тип" = %s',
+                   (event_site, event_site_type,))
+    uin_event_site = cursor.fetchone()
+    cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" FROM main."Мероприятие" '
+                   'WHERE main."Мероприятие"."УИН_Площадки" = %s AND main."Мероприятие"."Тип_мероприятия" = %s '
+                   'AND main."Мероприятие"."Название" = %s', (uin_event_site[0], event_type, event_name,))
+    uin_event = cursor.fetchone()
+    cursor.execute('INSERT INTO main."Билет"("УИН_Мероприятия", "Номер_ряда", '
+                   '"Номер_места", "Цена", "Забронирован") VALUES (%s, %s, %s, %s, 0)',
+                   (uin_event[0], row, place, price,))
+    dbase.commit()
+
+
 if __name__ == '__main__':
     print('Test')
     print(event_date_time('Звездные войны'))
