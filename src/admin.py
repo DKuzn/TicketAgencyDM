@@ -30,6 +30,10 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         self.eventSiteType.addItems(self.types)
         self.eventSiteTypeChoiceTool.addItems(self.types)
         self.eventSiteTypeChoiceTool.activated.connect(self.event_site_type_tool_choose)
+        self.eventSiteTypeTicket.addItems(self.types)
+        self.eventSiteTypeTicket.activated.connect(self.event_site_type_ticket_choose)
+        self.eventTypeTicket.activated.connect(self.event_type_ticket_choose)
+        self.addTicketsButton.clicked.connect(self.add_tickets_button_clicked)
 
     def date_time_is_changed(self):
         self.eventChoice.clear()
@@ -109,6 +113,7 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         event_site_name = self.eventSiteName.text()
         event_site_type = self.eventSiteType.currentText()
         add_event_site(event_site_name, event_site_type)
+        self.eventSiteName.clear()
 
     def add_event_button_clicked(self):
         event_site_type = self.eventSiteTypeChoiceTool.currentText()
@@ -118,6 +123,56 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         event_date = str(self.eventDateChoice.date().toPyDate())
         event_time = str(self.eventTimeChoice.time().toPyTime().strftime('%H:%M'))
         add_event(event_site, event_site_type, event_type, event_name, event_date, event_time)
+        self.eventName.clear()
+
+    def event_site_type_ticket_choose(self):
+        event_site_type = self.eventSiteTypeTicket.currentText()
+        event_site_list = event_sites_list(event_site_type)
+        self.eventSiteTicket.clear()
+        self.eventSiteTicket.addItems(event_site_list)
+        self.eventTypeTicket.clear()
+        self.eventTypeTicket.addItems(self.types[event_site_type])
+
+    def event_type_ticket_choose(self):
+        date_from = '1970-01-01'
+        date_to = '2199-01-01'
+        time_from = '00:00'
+        time_to = '23:59'
+        event_site = self.eventSiteTicket.currentText()
+        event_type = self.eventTypeTicket.currentText()
+        event_list = events_list(event_site, event_type, date_from, date_to, time_from, time_to)
+        self.eventTicket.clear()
+        self.eventTicket.addItems(event_list)
+
+    def add_tickets_button_clicked(self):
+        event_site_type = self.eventSiteTypeTicket.currentText()
+        event_site = self.eventSiteTicket.currentText()
+        event_type = self.eventTypeTicket.currentText()
+        event = self.eventTicket.currentText()
+        rows_count = int(self.rowsCount.value())
+        places_count = int(self.placesCount.value())
+        first_category_price = float(self.firstCategoryPrice.value())
+        second_category_price = float(self.secondCategoryPrice.value())
+        third_category_price = float(self.thirdCategoryPrice.value())
+        first_category_from = int(self.firstCategoryFrom.value())
+        first_category_to = int(self.firstCategoryTo.value())
+        second_category_from = int(self.secondCategoryFrom.value())
+        second_category_to = int(self.secondCategoryTo.value())
+        third_category_from = int(self.thirdCategoryFrom.value())
+        third_category_to = int(self.thirdCategoryTo.value())
+        for row in range(1, rows_count + 1, 1):
+            for place in range(1, places_count + 1, 1):
+                if first_category_from <= row <= first_category_to:
+                    price = first_category_price
+                elif second_category_from <= row <= second_category_to:
+                    price = second_category_price
+                elif third_category_from <= row <= third_category_to:
+                    price = third_category_price
+                else:
+                    break
+                add_ticket(event_site, event_site_type, event_type, event, row, place, price)
+
+        self.eventTicket.clear()
 
 
 def main():
