@@ -10,7 +10,7 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
     def __init__(self):
         super(TicketAgencyAdmin, self).__init__()
         self.setupUi(self)
-        self.types = json.load(open('../resources/types.json', 'r'))
+        self.types = json.load(open('../resources/types.json', 'r', encoding='UTF-8'))
         self.dateFrom.setDate(datetime.date.today())
         self.dateTo.setDate(datetime.date.today())
         self.eventDateChoice.setDate(datetime.date.today())
@@ -32,8 +32,24 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         self.eventSiteTypeChoiceTool.activated.connect(self.event_site_type_tool_choose)
         self.eventSiteTypeTicket.addItems(self.types)
         self.eventSiteTypeTicket.activated.connect(self.event_site_type_ticket_choose)
+        self.eventSiteTicket.activated.connect(self.event_site_ticket_choose)
         self.eventTypeTicket.activated.connect(self.event_type_ticket_choose)
+        self.eventTicket.activated.connect(self.event_ticket_choose)
         self.addTicketsButton.clicked.connect(self.add_tickets_button_clicked)
+        self.eventSiteName.textChanged.connect(self.event_site_name_text_changed)
+        self.eventName.textChanged.connect(self.event_name_text_changed)
+
+    def event_site_name_text_changed(self):
+        self.eventSiteName.setStyleSheet('color: black')
+        self.addEventSiteButton.setEnabled(True)
+        self.addEventSiteStatus.setStyleSheet('color: blue')
+        self.addEventSiteStatus.setText('Добавление...')
+
+    def event_name_text_changed(self):
+        self.eventName.setStyleSheet('color: black')
+        self.addEventButton.setEnabled(True)
+        self.addEventStatus.setStyleSheet('color: blue')
+        self.addEventStatus.setText('Добавление...')
 
     def date_time_is_changed(self):
         self.eventChoice.clear()
@@ -112,8 +128,21 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
     def add_event_site_button_clicked(self):
         event_site_name = self.eventSiteName.text()
         event_site_type = self.eventSiteType.currentText()
-        add_event_site(event_site_name, event_site_type)
-        self.eventSiteName.clear()
+        try:
+            if not event_site_name == '':
+                add_event_site(event_site_name, event_site_type)
+                self.eventSiteName.setStyleSheet('color: green')
+                self.addEventSiteStatus.setStyleSheet('color: green')
+                self.addEventSiteStatus.setText('Площадка добавлена успешно!')
+            else:
+                self.eventSiteName.setStyleSheet('color: red')
+                self.addEventSiteStatus.setStyleSheet('color: red')
+                self.addEventSiteStatus.setText('Ошибка! Введите название площадки.')
+        except psycopg2.errors.UniqueViolation:
+            self.eventSiteName.setStyleSheet('color: red')
+            self.addEventSiteStatus.setStyleSheet('color: red')
+            self.addEventSiteStatus.setText('Ошибка! Данная площадка была добавлена ранее.')
+            dbase.rollback()
 
     def add_event_button_clicked(self):
         event_site_type = self.eventSiteTypeChoiceTool.currentText()
@@ -122,8 +151,21 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         event_name = self.eventName.text()
         event_date = str(self.eventDateChoice.date().toPyDate())
         event_time = str(self.eventTimeChoice.time().toPyTime().strftime('%H:%M'))
-        add_event(event_site, event_site_type, event_type, event_name, event_date, event_time)
-        self.eventName.clear()
+        try:
+            if '' not in (event_site_type, event_site, event_type, event_name):
+                add_event(event_site, event_site_type, event_type, event_name, event_date, event_time)
+                self.eventName.setStyleSheet('color: green')
+                self.addEventStatus.setStyleSheet('color: green')
+                self.addEventStatus.setText('Мероприятие добавлено успешно!')
+            else:
+                self.eventName.setStyleSheet('color: red')
+                self.addEventStatus.setStyleSheet('color: red')
+                self.addEventStatus.setText('Ошибка! Введите название мероприятия.')
+        except psycopg2.errors.UniqueViolation:
+            self.eventName.setStyleSheet('color: red')
+            self.addEventStatus.setStyleSheet('color: red')
+            self.addEventStatus.setText('Ошибка! Данное мероприятие было добавлено ранее.')
+            dbase.rollback()
 
     def event_site_type_ticket_choose(self):
         event_site_type = self.eventSiteTypeTicket.currentText()
@@ -131,7 +173,13 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         self.eventSiteTicket.clear()
         self.eventSiteTicket.addItems(event_site_list)
         self.eventTypeTicket.clear()
+        self.eventTicket.clear()
+
+    def event_site_ticket_choose(self):
+        event_site_type = self.eventSiteTypeTicket.currentText()
+        self.eventTypeTicket.clear()
         self.eventTypeTicket.addItems(self.types[event_site_type])
+        self.eventTicket.clear()
 
     def event_type_ticket_choose(self):
         date_from = '1970-01-01'
@@ -143,6 +191,11 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         event_list = events_list(event_site, event_type, date_from, date_to, time_from, time_to)
         self.eventTicket.clear()
         self.eventTicket.addItems(event_list)
+
+    def event_ticket_choose(self):
+        self.addTicketsButton.setEnabled(True)
+        self.addTicketsStatus.setStyleSheet('color: blue')
+        self.addTicketsStatus.setText('Добавление...')
 
     def add_tickets_button_clicked(self):
         event_site_type = self.eventSiteTypeTicket.currentText()
@@ -169,10 +222,27 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
                 elif third_category_from <= row <= third_category_to:
                     price = third_category_price
                 else:
+                    self.addTicketsStatus.setStyleSheet('color: red')
+                    self.addTicketsStatus.setText('Ошибка! Укажите диапазон рядов для категории.')
                     break
-                add_ticket(event_site, event_site_type, event_type, event, row, place, price)
 
-        self.eventTicket.clear()
+                try:
+                    if price > 0.0:
+                        add_ticket(event_site, event_site_type, event_type, event, row, place, price)
+                    else:
+                        self.addTicketsStatus.setStyleSheet('color: red')
+                        self.addTicketsStatus.setText('Ошибка! Укажите цену для категории.')
+                        break
+
+                except psycopg2.errors.UniqueViolation:
+                    self.addTicketsStatus.setStyleSheet('color: red')
+                    self.addTicketsStatus.setText('Ошибка! Билеты были добавлены ранее.')
+                    dbase.rollback()
+                    break
+
+            else:
+                self.addTicketsStatus.setStyleSheet('color: green')
+                self.addTicketsStatus.setText('Билеты успешно добавлены!')
 
 
 def main():
