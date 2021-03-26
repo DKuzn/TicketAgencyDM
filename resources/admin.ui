@@ -449,24 +449,30 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>210</y>
+        <y>250</y>
         <width>661</width>
         <height>321</height>
        </rect>
       </property>
-      <layout class="QGridLayout" name="addEvent" rowstretch="0,0,0,0,0,0,0">
-       <item row="0" column="1" colspan="4">
-        <widget class="QLabel" name="label_8">
+      <layout class="QGridLayout" name="addEvent" rowstretch="0,0,0,0,0,0,0,0">
+       <item row="1" column="3" colspan="2">
+        <widget class="QComboBox" name="eventSiteTypeChoiceTool">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" colspan="2">
+        <widget class="QLabel" name="label_24">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>Добавить мероприятие</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <string>Выберите площадку</string>
          </property>
         </widget>
        </item>
@@ -482,20 +488,8 @@
          </property>
         </widget>
        </item>
-       <item row="1" column="1" colspan="2">
-        <widget class="QLabel" name="label_29">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Выберите тип площадки</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="4">
-        <widget class="QTimeEdit" name="eventTimeChoice">
+       <item row="2" column="3" colspan="2">
+        <widget class="QComboBox" name="eventSiteChoiceTool">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
@@ -515,24 +509,6 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="3" colspan="2">
-        <widget class="QComboBox" name="eventSiteChoiceTool">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="3" colspan="2">
-        <widget class="QComboBox" name="eventTypeChoiceTool">
-         <property name="font">
-          <font>
-           <pointsize>12</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
        <item row="5" column="2">
         <widget class="QDateEdit" name="eventDateChoice">
          <property name="font">
@@ -545,6 +521,57 @@
          </property>
         </widget>
        </item>
+       <item row="6" column="1" colspan="4">
+        <widget class="QPushButton" name="addEventButton">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Добавить</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" colspan="4">
+        <widget class="QLabel" name="label_8">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Добавить мероприятие</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1" colspan="2">
+        <widget class="QLabel" name="label_29">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Выберите тип площадки</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3" colspan="2">
+        <widget class="QComboBox" name="eventTypeChoiceTool">
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
+        </widget>
+       </item>
        <item row="5" column="1">
         <widget class="QLabel" name="label_26">
          <property name="font">
@@ -554,6 +581,15 @@
          </property>
          <property name="text">
           <string>Дата</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="4">
+        <widget class="QTimeEdit" name="eventTimeChoice">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
          </property>
         </widget>
        </item>
@@ -575,39 +611,17 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="1" colspan="2">
-        <widget class="QLabel" name="label_24">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
+       <item row="7" column="1" colspan="2">
+        <widget class="QLabel" name="label_40">
          <property name="text">
-          <string>Выберите площадку</string>
+          <string>Статус</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="3" colspan="2">
-        <widget class="QComboBox" name="eventSiteTypeChoiceTool">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1" colspan="4">
-        <widget class="QPushButton" name="addEventButton">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
+       <item row="7" column="3" colspan="2">
+        <widget class="QLabel" name="addEventStatus">
          <property name="text">
-          <string>Добавить</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -619,40 +633,10 @@
         <x>10</x>
         <y>10</y>
         <width>661</width>
-        <height>181</height>
+        <height>221</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="addEventSite">
-       <item row="0" column="1" colspan="2">
-        <widget class="QLabel" name="label_5">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Добавить площадку</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1" colspan="2">
-        <widget class="QPushButton" name="addEventSiteButton">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Добавить</string>
-         </property>
-        </widget>
-       </item>
        <item row="1" column="1">
         <widget class="QLabel" name="label_13">
          <property name="font">
@@ -662,6 +646,21 @@
          </property>
          <property name="text">
           <string>Выберите тип площадки</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1" colspan="2">
+        <widget class="QPushButton" name="addEventSiteButton">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Добавить</string>
          </property>
         </widget>
        </item>
@@ -701,6 +700,35 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="1" colspan="2">
+        <widget class="QLabel" name="label_5">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Добавить площадку</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLabel" name="label_39">
+         <property name="text">
+          <string>Статус</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="2">
+        <widget class="QLabel" name="addEventSiteStatus">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="gridLayoutWidget_5">
@@ -709,112 +737,28 @@
         <x>720</x>
         <y>10</y>
         <width>721</width>
-        <height>521</height>
+        <height>561</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="addTickets">
-       <item row="8" column="3">
-        <widget class="QSpinBox" name="secondCategoryFrom">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="4">
-        <widget class="QSpinBox" name="placesCount">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>1000</number>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="3">
-        <widget class="QSpinBox" name="thirdCategoryFrom">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="4">
-        <widget class="QSpinBox" name="firstCategoryTo">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="4">
-        <widget class="QLabel" name="label_34">
+       <item row="5" column="1">
+        <widget class="QLabel" name="label_25">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>По</string>
+          <string>Количество рядов</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="4">
-        <widget class="QSpinBox" name="secondCategoryTo">
+       <item row="2" column="3" colspan="2">
+        <widget class="QComboBox" name="eventSiteTicket">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
           </font>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="3">
-        <widget class="QLabel" name="label_23">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Количество мест</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="4">
-        <widget class="QSpinBox" name="thirdCategoryTo">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="3">
-        <widget class="QSpinBox" name="firstCategoryFrom">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="3">
-        <widget class="QLabel" name="label_33">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>С</string>
          </property>
         </widget>
        </item>
@@ -828,13 +772,27 @@
          </property>
         </widget>
        </item>
-       <item row="8" column="2">
-        <widget class="QDoubleSpinBox" name="secondCategoryPrice">
-         <property name="maximum">
-          <double>1099.990000000000009</double>
+       <item row="8" column="4">
+        <widget class="QSpinBox" name="secondCategoryTo">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
          </property>
-         <property name="singleStep">
-          <double>0.500000000000000</double>
+        </widget>
+       </item>
+       <item row="5" column="2">
+        <widget class="QSpinBox" name="rowsCount">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>1000</number>
          </property>
         </widget>
        </item>
@@ -855,30 +813,138 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="2">
-        <widget class="QSpinBox" name="rowsCount">
+       <item row="7" column="3">
+        <widget class="QSpinBox" name="firstCategoryFrom">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
           </font>
          </property>
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>1000</number>
-         </property>
         </widget>
        </item>
-       <item row="5" column="1">
-        <widget class="QLabel" name="label_25">
+       <item row="10" column="1" colspan="4">
+        <widget class="QPushButton" name="addTicketsButton">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="font">
           <font>
            <pointsize>11</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>Количество рядов</string>
+          <string>Добавить</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1" colspan="2">
+        <widget class="QLabel" name="label_30">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Выберите тип площадки</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="4">
+        <widget class="QSpinBox" name="thirdCategoryTo">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" colspan="2">
+        <widget class="QLabel" name="label_22">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Выберите площадку</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="3">
+        <widget class="QSpinBox" name="secondCategoryFrom">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" colspan="4">
+        <widget class="QLabel" name="label_21">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Добавить билеты</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1" colspan="2">
+        <widget class="QLabel" name="label_31">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Выберите мероприятие</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="3" colspan="2">
+        <widget class="QComboBox" name="eventTicket">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="4">
+        <widget class="QLabel" name="label_34">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>По</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="3">
+        <widget class="QSpinBox" name="thirdCategoryFrom">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="3">
+        <widget class="QLabel" name="label_33">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>С</string>
          </property>
         </widget>
        </item>
@@ -901,27 +967,34 @@
          </property>
         </widget>
        </item>
-       <item row="7" column="1">
-        <widget class="QLabel" name="label_35">
+       <item row="5" column="3">
+        <widget class="QLabel" name="label_23">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>Первая категория</string>
+          <string>Количество мест</string>
          </property>
         </widget>
        </item>
-       <item row="8" column="1">
-        <widget class="QLabel" name="label_36">
+       <item row="8" column="2">
+        <widget class="QDoubleSpinBox" name="secondCategoryPrice">
+         <property name="maximum">
+          <double>1099.990000000000009</double>
+         </property>
+         <property name="singleStep">
+          <double>0.500000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3" colspan="2">
+        <widget class="QComboBox" name="eventSiteTypeTicket">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
           </font>
-         </property>
-         <property name="text">
-          <string>Вторая категория</string>
          </property>
         </widget>
        </item>
@@ -937,45 +1010,6 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="1" colspan="4">
-        <widget class="QPushButton" name="addTicketsButton">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Добавить</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1" colspan="4">
-        <widget class="QLabel" name="label_21">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Добавить билеты</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="3" colspan="2">
-        <widget class="QComboBox" name="eventTicket">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
        <item row="3" column="3" colspan="2">
         <widget class="QComboBox" name="eventTypeTicket">
          <property name="font">
@@ -985,45 +1019,51 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="3" colspan="2">
-        <widget class="QComboBox" name="eventSiteTicket">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="3" colspan="2">
-        <widget class="QComboBox" name="eventSiteTypeTicket">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1" colspan="2">
-        <widget class="QLabel" name="label_30">
+       <item row="8" column="1">
+        <widget class="QLabel" name="label_36">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>Выберите тип площадки</string>
+          <string>Вторая категория</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1" colspan="2">
-        <widget class="QLabel" name="label_22">
+       <item row="5" column="4">
+        <widget class="QSpinBox" name="placesCount">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>1000</number>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QLabel" name="label_35">
          <property name="font">
           <font>
            <pointsize>11</pointsize>
           </font>
          </property>
          <property name="text">
-          <string>Выберите площадку</string>
+          <string>Первая категория</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="4">
+        <widget class="QSpinBox" name="firstCategoryTo">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
          </property>
         </widget>
        </item>
@@ -1039,15 +1079,17 @@
          </property>
         </widget>
        </item>
-       <item row="4" column="1" colspan="2">
-        <widget class="QLabel" name="label_31">
-         <property name="font">
-          <font>
-           <pointsize>11</pointsize>
-          </font>
-         </property>
+       <item row="11" column="1" colspan="2">
+        <widget class="QLabel" name="label_41">
          <property name="text">
-          <string>Выберите мероприятие</string>
+          <string>Статус</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="3" colspan="2">
+        <widget class="QLabel" name="addTicketsStatus">
+         <property name="text">
+          <string/>
          </property>
         </widget>
        </item>
