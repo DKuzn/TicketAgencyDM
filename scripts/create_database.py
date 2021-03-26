@@ -116,7 +116,8 @@ def get_database(host: str = 'localhost'):
         "Забронирован"    integer not null,
         "УИН_Заказа"      integer
             constraint билет_заказ_уин_заказа_fk
-                references main."Заказ"
+                references main."Заказ",
+        unique            ("УИН_Мероприятия", "Номер_ряда", "Номер_места")
     );
     
     alter table main."Билет"
