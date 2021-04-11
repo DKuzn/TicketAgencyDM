@@ -17,7 +17,7 @@
 
 import qrcode
 import textwrap
-from sql_utils import get_ticket_info
+from sql_utils import get_ticket_info_form
 from PIL import Image, ImageDraw, ImageFont
 
 
@@ -29,9 +29,9 @@ def get_qrcode(text: str):
 
 
 def form_ticket_info(ticket: int):
-    info = get_ticket_info(ticket)
-    header = 'Тип: Название: Площадка: Дата: Время: Ряд: Место: Цена:'.split(' ')
-    to_info = ['\n'.join(('Билетное агенство "Кузница"', 'Номер билета: ' + str(ticket)))]
+    info = get_ticket_info_form(ticket)
+    header = 'Тип: Название: Площадка: Дата: Время: Ряд: Место: Цена: Клиент:'.split(' ')
+    to_info = ['\n'.join(('Билетное агентство "Кузница"', 'Номер билета: ' + str(ticket)))]
     for i, inf in enumerate(info):
         row = ''.join((header[i], ' ', str(inf)))
         row = textwrap.wrap(row, width=26)
@@ -72,5 +72,5 @@ def get_a4(tickets: list):
 
 
 if __name__ == '__main__':
-    back = get_a4(['10010001', '10010002', '10020003', '10010004', '20010005', '10010006', '10010007'])
+    back = get_a4(['97', '98', '99'])
     back[0].show()
