@@ -118,8 +118,9 @@ def rows_list(event: str):
     cursor.execute('SELECT main."Билет"."Номер_ряда" FROM main."Билет" '
                    'WHERE main."Билет"."УИН_Мероприятия" = %s AND main."Билет"."Забронирован" = 0', (uin_event[0],))
     rows = cursor.fetchall()
-    row_list = [str(i[0]) for i in rows]
-    row_list = list(set(row_list))
+    row_list = [i[0] for i in rows]
+    row_list = sorted(list(set(row_list)))
+    row_list = ([str(i) for i in row_list])
     return row_list
 
 
@@ -198,18 +199,9 @@ def find_last_order(uin_client: int):
         return None
 
 
-def add_order_for_old(uin_client: int):
-    uin_order = find_last_order(uin_client) + 1
-    cursor.execute('INSERT INTO main."Заказ" ("УИН_Заказа", "УИН_Клиента", "Оплачен") '
-                   'VALUES (%s, %s, 0)', (uin_order, uin_client,))
-    dbase.commit()
-
-
-def add_order_for_new(uin_client: int):
-    uin = str(uin_client) + '00000001'
-    uin_order = int(uin)
-    cursor.execute('INSERT INTO main."Заказ"("УИН_Заказа", "УИН_Клиента", "Оплачен") '
-                   'VALUES (%s, %s, 0)', (uin_order, uin_client,))
+def add_order(uin_client: int):
+    cursor.execute('INSERT INTO main."Заказ"("УИН_Клиента", "Оплачен") '
+                   'VALUES (%s, 0)', (uin_client,))
     dbase.commit()
 
 
@@ -226,6 +218,21 @@ def get_ticket_info(uin_ticket: int):
                    'main."Билет"."Номер_ряда", main."Билет"."Номер_места", main."Билет"."Цена" FROM main."Билет" '
                    'JOIN main."Мероприятие" ON main."Билет"."УИН_Мероприятия" = main."Мероприятие"."УИН_Мероприятия" '
                    'JOIN main."Площадка" ON main."Площадка"."УИН_Площадки" = main."Мероприятие"."УИН_Площадки" '
+                   'WHERE main."Билет"."Номер_билета" = %s', (uin_ticket,))
+    ticket_info = cursor.fetchone()
+    return ticket_info
+
+
+def get_ticket_info_form(uin_ticket: int):
+    cursor.execute('SELECT main."Мероприятие"."Тип_мероприятия", '
+                   'main."Мероприятие"."Название", main."Площадка"."Название", '
+                   'main."Мероприятие"."Дата", main."Мероприятие"."Время", '
+                   'main."Билет"."Номер_ряда", main."Билет"."Номер_места", '
+                   'main."Билет"."Цена", main."Клиент"."Email" FROM main."Билет" '
+                   'JOIN main."Мероприятие" ON main."Билет"."УИН_Мероприятия" = main."Мероприятие"."УИН_Мероприятия" '
+                   'JOIN main."Площадка" ON main."Площадка"."УИН_Площадки" = main."Мероприятие"."УИН_Площадки" '
+                   'JOIN main."Заказ" ON main."Билет"."УИН_Заказа" = main."Заказ"."УИН_Заказа" '
+                   'JOIN main."Клиент" ON main."Клиент"."УИН_Клиента" = main."Заказ"."УИН_Клиента"'
                    'WHERE main."Билет"."Номер_билета" = %s', (uin_ticket,))
     ticket_info = cursor.fetchone()
     return ticket_info
@@ -285,6 +292,6 @@ def add_ticket(event_site: str, event_site_type: str, event_type: str, event_nam
 if __name__ == '__main__':
     print('Test')
     print(event_date_time('Звездные войны'))
-    print(get_ticket_info(10010001))
+    print(get_ticket_info(1))
     print(list_tables())
     print(get_table('Площадка'))
