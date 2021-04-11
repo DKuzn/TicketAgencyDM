@@ -37,6 +37,7 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.temp_email = ''
         self.total_cost = 0
         self.setupUi(self)
+        self.ticketsList.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.newOrderButton.clicked.connect(self.new_order_button_clicked)
         self.payButton.clicked.connect(self.pay_button_clicked)
         self.addToOrderButton.clicked.connect(self.add_to_order_button_clicked)
@@ -80,12 +81,9 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
                 if uin_client is None:
                     add_client(email, first_name, last_name)
                     uin_client = find_client(email)
-                    add_order_for_new(uin_client)
+                    add_order(uin_client)
                 else:
-                    if find_last_order(uin_client) is None:
-                        add_order_for_new(uin_client)
-                    else:
-                        add_order_for_old(uin_client)
+                    add_order(uin_client)
                 self.orderStatus.setStyleSheet('color: blue')
                 self.orderStatus.setText('Создан')
                 self.addToOrderButton.setEnabled(True)
