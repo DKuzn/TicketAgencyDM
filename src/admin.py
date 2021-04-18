@@ -1,9 +1,13 @@
 import sys
 from PyQt5 import QtWidgets
 from sql_utils import *
+from form_tickets import get_a4
 import admin_ui
 import datetime
 import json
+import os
+import platform
+import tempfile
 
 
 class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
@@ -11,6 +15,7 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         super(TicketAgencyAdmin, self).__init__()
         self.setupUi(self)
         self.types = json.load(open('../resources/types.json', 'r', encoding='UTF-8'))
+        self.ticketsListRecovery.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.dateFrom.setDate(datetime.date.today())
         self.dateTo.setDate(datetime.date.today())
         self.eventDateChoice.setDate(datetime.date.today())
@@ -38,6 +43,16 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         self.addTicketsButton.clicked.connect(self.add_tickets_button_clicked)
         self.eventSiteName.textChanged.connect(self.event_site_name_text_changed)
         self.eventName.textChanged.connect(self.event_name_text_changed)
+        self.applyDiscountButton.clicked.connect(self.apply_discount_button_clicked)
+        self.priceIncreaseButton.clicked.connect(self.price_increase_button_clicked)
+        self.showNearestEventButton.clicked.connect(self.show_nearest_event_button_clicked)
+        self.findOrdersButton.clicked.connect(self.find_order_button_clicked)
+        self.ordersList.itemClicked.connect(self.orders_list_item_clicked)
+        self.ticketsRecoveryButton.clicked.connect(self.tickets_recovery_button_clicked)
+        self.eventSiteTypeNearest.addItems(self.types)
+        self.eventSiteTypeNearest.activated.connect(self.event_site_type_nearest_choose)
+        self.allEventSitesBox.stateChanged.connect(self.all_event_sites_box_change_state)
+        self.ticketsListRecovery.itemClicked.connect(self.tickets_list_recovery_select_row)
 
     def event_site_name_text_changed(self):
         self.eventSiteName.setStyleSheet('color: black')
@@ -243,6 +258,94 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
             else:
                 self.addTicketsStatus.setStyleSheet('color: green')
                 self.addTicketsStatus.setText('Билеты успешно добавлены!')
+
+    def apply_discount_button_clicked(self):
+        discount = 1.0 - self.discountPercentage.value() / 100.0
+        self.update_price(discount)
+
+    def price_increase_button_clicked(self):
+        increase = 1.0 + self.increasePercentage.value() / 100.0
+        self.update_price(increase)
+
+    def update_price(self, value):
+        event = self.eventChoice.currentText()
+        event_type = self.eventTypeChoice.currentText()
+        tickets = unsold_tickets_list(event, event_type)
+        for ticket, price in tickets:
+            update_ticket_price(ticket, round(price * value, 2))
+
+    def show_nearest_event_button_clicked(self):
+        event_site_type = self.eventSiteTypeNearest.currentText()
+        event_site = self.eventSiteNearest.currentText()
+        if self.allEventSitesBox.isChecked():
+            event = find_nearest_event_all(str(datetime.date.today()))
+        else:
+            event = find_nearest_event(str(datetime.date.today()), event_site_type, event_site)
+
+        if event is not None:
+            self.eventNameNearest.setText(event[0])
+            self.eventTypeNearest.setText(event[1])
+            self.eventDateNearest.setText(event[2])
+            self.eventTimeNearest.setText(event[3])
+
+    def find_order_button_clicked(self):
+        email = self.emailFindOrders.text()
+        uin_client = find_client(email)
+        orders = orders_list(uin_client)
+        self.ordersList.clear()
+        self.ordersList.addItems(orders)
+
+    def orders_list_item_clicked(self):
+        uin_order = int(self.ordersList.currentItem().text())
+        tickets = find_tickets_by_order(uin_order)
+        for row_number, uin_ticket in enumerate(tickets):
+            self.ticketsListRecovery.setRowCount(row_number)
+            info = get_ticket_info(uin_ticket)
+            for idx, i in enumerate(info):
+                self.ticketsListRecovery.setItem(row_number - 1, idx, QtWidgets.QTableWidgetItem(str(i)))
+
+    def tickets_list_recovery_select_row(self):
+        row = self.ticketsListRecovery.currentItem().row()
+        self.ticketsListRecovery.selectRow(row)
+        uin_order = int(self.ordersList.currentItem().text())
+        tickets = find_tickets_by_order(uin_order)
+        self.ticketsToRecoveryList.addItem(str(tickets[row]))
+        uniq = self.remove_duplicates()
+        uniq = [str(i) for i in uniq]
+        self.ticketsToRecoveryList.clear()
+        self.ticketsToRecoveryList.addItems(uniq)
+
+    def tickets_recovery_button_clicked(self):
+        tickets = self.remove_duplicates()
+        recovery_tickets = get_a4(tickets)
+        tmp = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
+        recovery_tickets[0].save(tmp, format='PDF', resolution=100.0, save_all=True, append_images=recovery_tickets[1:])
+        tmp.close()
+        if platform.system() == 'Linux':
+            os.system('xdg-open ' + tmp.name)
+        elif platform.system() == 'Windows':
+            os.system(tmp.name)
+
+    def remove_duplicates(self):
+        tickets = []
+        for row in range(self.ticketsToRecoveryList.count()):
+            tickets.append(int(self.ticketsToRecoveryList.item(row).text()))
+        tickets = list(set(tickets))
+        return tickets
+
+    def event_site_type_nearest_choose(self):
+        event_site_type = self.eventSiteTypeNearest.currentText()
+        event_sites = event_sites_list(event_site_type)
+        self.eventSiteNearest.clear()
+        self.eventSiteNearest.addItems(event_sites)
+
+    def all_event_sites_box_change_state(self):
+        if self.eventSiteTypeNearest.isEnabled():
+            self.eventSiteTypeNearest.setEnabled(False)
+            self.eventSiteNearest.setEnabled(False)
+        else:
+            self.eventSiteTypeNearest.setEnabled(True)
+            self.eventSiteNearest.setEnabled(True)
 
 
 def main():
