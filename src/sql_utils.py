@@ -104,6 +104,17 @@ def sold_tickets_list(event: str):
     return ticket_list
 
 
+def unsold_tickets_list(event: str, event_type: str):
+    cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" FROM main."Мероприятие" '
+                   'WHERE main."Мероприятие"."Название" = %s '
+                   'AND main."Мероприятие"."Тип_мероприятия" = %s', (event, event_type,))
+    uin_event = cursor.fetchone()
+    cursor.execute('SELECT main."Билет"."Номер_билета", main."Билет"."Цена" FROM main."Билет" '
+                   'WHERE main."Билет"."УИН_Мероприятия" = %s AND "УИН_Заказа" IS NULL', (uin_event,))
+    tickets = cursor.fetchall()
+    return tickets
+
+
 def event_date_time(event: str):
     cursor.execute('SELECT main."Мероприятие"."Дата", main."Мероприятие"."Время" '
                    'FROM main."Мероприятие" WHERE main."Мероприятие"."Название" = %s', (event,))
@@ -289,9 +300,58 @@ def add_ticket(event_site: str, event_site_type: str, event_type: str, event_nam
     dbase.commit()
 
 
+def find_nearest_event_all(date: str):
+    cursor.execute(f'SELECT main."Мероприятие"."Название", main."Мероприятие"."Тип_мероприятия",'
+                   f'main."Мероприятие"."Дата", main."Мероприятие"."Время" FROM main."Мероприятие" '
+                   f'WHERE main."Мероприятие"."Дата" >= \'{date}\''
+                   f'ORDER BY (main."Мероприятие"."Дата", main."Мероприятие"."Время")')
+    event = cursor.fetchone()
+    return event
+
+
+def find_nearest_event(date: str, event_site_type: str, event_site: str):
+    cursor.execute(f'SELECT main."Мероприятие"."Название", main."Мероприятие"."Тип_мероприятия",'
+                   f'main."Мероприятие"."Дата", main."Мероприятие"."Время" FROM main."Мероприятие" '
+                   f'JOIN main."Площадка" ON main."Мероприятие"."УИН_Площадки" = main."Площадка"."УИН_Площадки"'
+                   f'WHERE main."Мероприятие"."Дата" >= \'{date}\''
+                   f'AND main."Площадка"."Название" = \'{event_site}\''
+                   f'AND main."Площадка"."Тип" = \'{event_site_type}\''
+                   f'ORDER BY (main."Мероприятие"."Дата", main."Мероприятие"."Время")')
+    event = cursor.fetchone()
+    return event
+
+
+def orders_list(uin_client: int):
+    cursor.execute(f'SELECT main."Заказ"."УИН_Заказа" FROM main."Заказ"'
+                   f'WHERE main."Заказ"."УИН_Клиента" = {uin_client} '
+                   f'AND main."Заказ"."Оплачен" = 1')
+    orders = cursor.fetchall()
+    orders = [str(i[0]) for i in orders]
+    return orders
+
+
+def find_tickets_by_order(uin_order: int):
+    cursor.execute(f'SELECT main."Билет"."Номер_билета" FROM main."Билет"'
+                   f'WHERE main."Билет"."УИН_Заказа" = {uin_order}')
+    tickets = cursor.fetchall()
+    tickets = [i[0] for i in tickets]
+    return sorted(tickets)
+
+
+def update_ticket_price(ticket_number: int, new_price: float):
+    cursor.execute(f'UPDATE main."Билет" SET "Цена" = {new_price} '
+                   f'WHERE main."Билет"."Номер_билета" = {ticket_number}')
+    dbase.commit()
+
+
 if __name__ == '__main__':
     print('Test')
     print(event_date_time('Звездные войны'))
     print(get_ticket_info(1))
     print(list_tables())
     print(get_table('Площадка'))
+    print(find_nearest_event_all('2021-08-21'))
+    print(find_nearest_event('2021-08-21', 'Кинотеатр', 'Монитор'))
+    print(orders_list(1))
+    print(find_tickets_by_order(1))
+    print(unsold_tickets_list('Звездные войны', 'Показ фильма'))
