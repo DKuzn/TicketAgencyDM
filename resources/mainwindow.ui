@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Билетное Агенство &quot;Кузница&quot;</string>
+   <string>Билетное Агентство &quot;Кузница&quot;</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="gridLayoutWidget">
@@ -446,6 +446,9 @@
        <property name="placeholderText">
         <string>Имя</string>
        </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
@@ -461,6 +464,9 @@
        <property name="placeholderText">
         <string>Фамилия</string>
        </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
+       </property>
       </widget>
      </item>
      <item>
@@ -472,6 +478,9 @@
        </property>
        <property name="placeholderText">
         <string>E-mail (обязательно)</string>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
