@@ -1,4 +1,3 @@
-import sys
 from PyQt5 import QtWidgets
 from sql_utils import *
 from form_tickets import get_a4
@@ -8,6 +7,7 @@ import json
 import os
 import platform
 import tempfile
+import re
 
 
 class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
@@ -53,6 +53,8 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         self.eventSiteTypeNearest.activated.connect(self.event_site_type_nearest_choose)
         self.allEventSitesBox.stateChanged.connect(self.all_event_sites_box_change_state)
         self.ticketsListRecovery.itemClicked.connect(self.tickets_list_recovery_select_row)
+        self.discountPercentage.valueChanged.connect(self.update_price_spin_box_changed)
+        self.increasePercentage.valueChanged.connect(self.update_price_spin_box_changed)
 
     def event_site_name_text_changed(self):
         self.eventSiteName.setStyleSheet('color: black')
@@ -262,10 +264,18 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
     def apply_discount_button_clicked(self):
         discount = 1.0 - self.discountPercentage.value() / 100.0
         self.update_price(discount)
+        self.priceUpdateStatus.setStyleSheet('color: green')
+        self.priceUpdateStatus.setText('Скидка применена.')
 
     def price_increase_button_clicked(self):
         increase = 1.0 + self.increasePercentage.value() / 100.0
         self.update_price(increase)
+        self.priceUpdateStatus.setStyleSheet('color: green')
+        self.priceUpdateStatus.setText('Повышение применено.')
+
+    def update_price_spin_box_changed(self):
+        self.priceUpdateStatus.setStyleSheet('color: blue')
+        self.priceUpdateStatus.setText('Выбор значения...')
 
     def update_price(self, value):
         event = self.eventChoice.currentText()
@@ -289,11 +299,29 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
             self.eventTimeNearest.setText(event[3])
 
     def find_order_button_clicked(self):
+        self.ticketsToRecoveryList.clear()
         email = self.emailFindOrders.text()
-        uin_client = find_client(email)
-        orders = orders_list(uin_client)
-        self.ordersList.clear()
-        self.ordersList.addItems(orders)
+        if not email == '':
+            if self.check_email(email):
+                uin_client = find_client(email)
+                if uin_client is not None:
+                    orders = orders_list(uin_client)
+                    self.ordersList.clear()
+                    self.ordersList.addItems(orders)
+                    self.orderSearchStatus.setStyleSheet('color: green')
+                    self.orderSearchStatus.setText('Заказы найдены.')
+                else:
+                    self.orderSearchStatus.setStyleSheet('color: red')
+                    self.orderSearchStatus.setText('Ошибка! Клиент не найден.')
+                    self.ordersList.clear()
+            else:
+                self.orderSearchStatus.setStyleSheet('color: red')
+                self.orderSearchStatus.setText('Ошибка! E-mail некорректен.')
+                self.ordersList.clear()
+        else:
+            self.orderSearchStatus.setStyleSheet('color: blue')
+            self.orderSearchStatus.setText('Введите E-mail.')
+            self.ordersList.clear()
 
     def orders_list_item_clicked(self):
         uin_order = int(self.ordersList.currentItem().text())
@@ -346,6 +374,14 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         else:
             self.eventSiteTypeNearest.setEnabled(True)
             self.eventSiteNearest.setEnabled(True)
+
+    @staticmethod
+    def check_email(email: str):
+        email_template = '^[0-9A-Za-z]+[\._]?[0-9A-Za-z]+[@]\w+[.]\w+$'
+        if re.search(email_template, email):
+            return True
+        else:
+            return False
 
 
 def main():
