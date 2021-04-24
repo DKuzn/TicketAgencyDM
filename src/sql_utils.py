@@ -16,15 +16,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import psycopg2
+import os
+import sys
 
-dbase = psycopg2.connect(
-    host='localhost',  # ip-address to server with PostgresQL
-    database='ticketagencydb',
-    user='postgres',
-    password='mypass',
-    port='5432')
 
-cursor = dbase.cursor()
+try:
+    dbase = psycopg2.connect(
+        host='localhost',  # ip-address to server with PostgresQL
+        database='ticketagencydb',
+        user='postgres',
+        password='mypass',
+        port='5432')
+
+    cursor = dbase.cursor()
+except psycopg2.OperationalError:
+    os.system('echo Connection to database failed!')
+    sys.exit()
 
 
 def event_site_types_list():
@@ -71,9 +78,10 @@ def events_list(event_site: str, event_type: str, date_from: str, date_to: str, 
     return event_list
 
 
-def available_tickets_list(event: str):
-    cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" FROM main."Мероприятие" '
-                   'WHERE main."Мероприятие"."Название" = %s', (event,))
+def available_tickets_list(event: str, event_type: str):
+    cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" '
+                   'FROM main."Мероприятие" WHERE main."Мероприятие"."Название" = %s '
+                   'AND main."Мероприятие"."Тип_мероприятия" = %s', (event, event_type,))
     uin_event = cursor.fetchone()
     cursor.execute('SELECT main."Билет"."Номер_билета" FROM main."Билет" '
                    'WHERE main."Билет"."УИН_Мероприятия" = %s AND main."Билет"."Забронирован" = 0', (uin_event,))
@@ -82,9 +90,10 @@ def available_tickets_list(event: str):
     return ticket_list
 
 
-def tickets_list(event: str):
-    cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" FROM main."Мероприятие" '
-                   'WHERE main."Мероприятие"."Название" = %s', (event,))
+def tickets_list(event: str, event_type: str):
+    cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" '
+                   'FROM main."Мероприятие" WHERE main."Мероприятие"."Название" = %s '
+                   'AND main."Мероприятие"."Тип_мероприятия" = %s', (event, event_type,))
     uin_event = cursor.fetchone()
     cursor.execute('SELECT main."Билет"."Номер_билета" FROM main."Билет" '
                    'WHERE main."Билет"."УИН_Мероприятия" = %s', (uin_event,))
@@ -93,9 +102,10 @@ def tickets_list(event: str):
     return ticket_list
 
 
-def sold_tickets_list(event: str):
-    cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" FROM main."Мероприятие" '
-                   'WHERE main."Мероприятие"."Название" = %s', (event,))
+def sold_tickets_list(event: str, event_type: str):
+    cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" '
+                   'FROM main."Мероприятие" WHERE main."Мероприятие"."Название" = %s '
+                   'AND main."Мероприятие"."Тип_мероприятия" = %s', (event, event_type,))
     uin_event = cursor.fetchone()
     cursor.execute('SELECT main."Билет"."Номер_билета" FROM main."Билет" '
                    'WHERE main."Билет"."УИН_Мероприятия" = %s AND "УИН_Заказа" IS NOT NULL', (uin_event,))
@@ -115,16 +125,18 @@ def unsold_tickets_list(event: str, event_type: str):
     return tickets
 
 
-def event_date_time(event: str):
+def event_date_time(event: str, event_type: str):
     cursor.execute('SELECT main."Мероприятие"."Дата", main."Мероприятие"."Время" '
-                   'FROM main."Мероприятие" WHERE main."Мероприятие"."Название" = %s', (event,))
+                   'FROM main."Мероприятие" WHERE main."Мероприятие"."Название" = %s '
+                   'AND main."Мероприятие"."Тип_мероприятия" = %s', (event, event_type,))
     date_time = cursor.fetchone()
     return date_time
 
 
-def rows_list(event: str):
+def rows_list(event: str, event_type: str):
     cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" '
-                   'FROM main."Мероприятие" WHERE main."Мероприятие"."Название" = %s', (event,))
+                   'FROM main."Мероприятие" WHERE main."Мероприятие"."Название" = %s '
+                   'AND main."Мероприятие"."Тип_мероприятия" = %s', (event, event_type,))
     uin_event = cursor.fetchone()
     cursor.execute('SELECT main."Билет"."Номер_ряда" FROM main."Билет" '
                    'WHERE main."Билет"."УИН_Мероприятия" = %s AND main."Билет"."Забронирован" = 0', (uin_event[0],))
@@ -135,9 +147,10 @@ def rows_list(event: str):
     return row_list
 
 
-def places_list(event: str, row: str):
+def places_list(event: str, event_type: str, row: str):
     cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" '
-                   'FROM main."Мероприятие" WHERE main."Мероприятие"."Название" = %s', (event,))
+                   'FROM main."Мероприятие" WHERE main."Мероприятие"."Название" = %s '
+                   'AND main."Мероприятие"."Тип_мероприятия" = %s', (event, event_type,))
     uin_event = cursor.fetchone()
     cursor.execute('SELECT main."Билет"."Номер_места" FROM main."Билет" WHERE main."Билет"."УИН_Мероприятия" = %s '
                    'AND main."Билет"."Номер_ряда" = %s AND main."Билет"."Забронирован" = 0', (uin_event[0], int(row),))
@@ -146,11 +159,12 @@ def places_list(event: str, row: str):
     return place_list
 
 
-def find_ticket(event: str, row: str, place: str):
+def find_ticket(event: str, event_type: str, row: str, place: str):
     row = int(row)
     place = int(place)
     cursor.execute('SELECT main."Мероприятие"."УИН_Мероприятия" '
-                   'FROM main."Мероприятие" WHERE main."Мероприятие"."Название" = %s', (event,))
+                   'FROM main."Мероприятие" WHERE main."Мероприятие"."Название" = %s '
+                   'AND main."Мероприятие"."Тип_мероприятия" = %s', (event, event_type,))
     uin_event = cursor.fetchone()
     cursor.execute('SELECT main."Билет"."Номер_билета", main."Билет"."Цена" '
                    'FROM main."Билет" WHERE main."Билет"."УИН_Мероприятия" = %s '

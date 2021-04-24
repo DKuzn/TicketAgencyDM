@@ -58,6 +58,9 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         self.rowChoice.activated.connect(self.row_choose)
         self.placeChoice.activated.connect(self.place_choose)
 
+    def closeEvent(self, e):
+        self.cancel_button_clicked()
+
     def new_order_button_clicked(self):
         if not self.order_is_payed:
             self.cancel_button_clicked()
@@ -106,10 +109,11 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
     def add_to_order_button_clicked(self):
         event = self.eventChoice.currentText()
+        event_type = self.eventTypeChoice.currentText()
         row = self.rowChoice.currentText()
         place = self.placeChoice.currentText()
-        if event and row and place:
-            ticket = find_ticket(event, row, place)
+        if event and event_type and row and place:
+            ticket = find_ticket(event, event_type, row, place)
             ticket_reservation(ticket[0])
             if len(self.order_list) < self.max_tickets:
                 self.order_list.append(str(ticket[0]))
@@ -190,12 +194,13 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
     def event_choose(self):
         event = self.eventChoice.currentText()
-        if event:
-            rows = rows_list(event)
+        event_type = self.eventTypeChoice.currentText()
+        if event and event_type:
+            rows = rows_list(event, event_type)
             self.rowChoice.clear()
             self.rowChoice.addItems(rows)
             self.eventDate.clear()
-            date, time = event_date_time(event)
+            date, time = event_date_time(event, event_type)
             date = datetime.date.fromisoformat(date)
             date = date.strftime('%d.%m.%Y')
             self.eventDate.setText(str(date))
@@ -203,8 +208,9 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
 
     def row_choose(self):
         event = self.eventChoice.currentText()
+        event_type = self.eventTypeChoice.currentText()
         row = self.rowChoice.currentText()
-        places = places_list(event, row)
+        places = places_list(event, event_type, row)
         self.placeChoice.clear()
         self.placeChoice.addItems(places)
 
@@ -212,7 +218,8 @@ class TicketAgencyApp(QtWidgets.QMainWindow, mainwindow.Ui_MainWindow):
         row = self.rowChoice.currentText()
         place = self.placeChoice.currentText()
         event = self.eventChoice.currentText()
-        ticket = find_ticket(event, row, place)
+        event_type = self.eventTypeChoice.currentText()
+        ticket = find_ticket(event, event_type, row, place)
         self.ticketPrice.setText(str(ticket[1]))
 
     def get_date_time(self):
