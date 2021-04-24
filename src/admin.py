@@ -101,11 +101,12 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
 
     def event_choose(self):
         event = self.eventChoice.currentText()
-        available_tickets = len(available_tickets_list(event))
-        tickets_count = len(tickets_list(event))
-        sold_tickets = len(sold_tickets_list(event))
+        event_type = self.eventTypeChoice.currentText()
+        available_tickets = len(available_tickets_list(event, event_type))
+        tickets_count = len(tickets_list(event, event_type))
+        sold_tickets = len(sold_tickets_list(event, event_type))
         self.eventDate.clear()
-        date, time = event_date_time(event)
+        date, time = event_date_time(event, event_type)
         date = datetime.date.fromisoformat(date)
         date = date.strftime('%d.%m.%Y')
         self.eventDate.setText(str(date))
