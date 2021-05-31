@@ -328,10 +328,10 @@ class TicketAgencyAdmin(QtWidgets.QMainWindow, admin_ui.Ui_MainWindow):
         uin_order = int(self.ordersList.currentItem().text())
         tickets = find_tickets_by_order(uin_order)
         for row_number, uin_ticket in enumerate(tickets):
-            self.ticketsListRecovery.setRowCount(row_number)
+            self.ticketsListRecovery.setRowCount(row_number + 1)
             info = get_ticket_info(uin_ticket)
             for idx, i in enumerate(info):
-                self.ticketsListRecovery.setItem(row_number - 1, idx, QtWidgets.QTableWidgetItem(str(i)))
+                self.ticketsListRecovery.setItem(row_number, idx, QtWidgets.QTableWidgetItem(str(i)))
 
     def tickets_list_recovery_select_row(self):
         row = self.ticketsListRecovery.currentItem().row()
